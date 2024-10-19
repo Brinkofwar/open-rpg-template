@@ -18,6 +18,11 @@
 		{
 			"Name": "StudioTelemetry",
 			"Enabled": false
+		},
+		{
+			"Name": "LiveBlueprintDebugger",
+			"Enabled": false,
+			"MarketplaceURL": "com.epicgames.launcher://ue/marketplace/product/6019cfbf80bb4942add3b61d9180380a"
 		}
 	]
 }
