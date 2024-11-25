@@ -5,8 +5,8 @@
 #include "CoreMinimal.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "RPGTemplate/Public/DataType/Enum/ELogType.h"
+#include "RPGTemplate/Public/DataType/Enum/EBranchType.h"
 #include "UtilityLibrary.generated.h"
-
 
 /**
  * 
@@ -18,5 +18,11 @@ class RPGTEMPLATE_API UUtilityLibrary : public UBlueprintFunctionLibrary
 
 	UFUNCTION(BlueprintCallable, Category = "EUtility", meta=(DefaultToSelf = "Object", DevelopmentOnly, AdvancedDisplay="Time, Object"))
 	static void PrintLog(FString Text, ELogType logType, UObject* Object, float Time = 2.0f);
+
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "EUtility")
+	static FString GetRandomAlphaDigit(int Length = 5);
+
+	UFUNCTION(BlueprintCallable, Category = "EUtility", Meta = (ExpandEnumAsExecs = "Branches"))
+	static void NBranch(bool Condition, TEnumAsByte<EBranchType>& Branches);
 
 };

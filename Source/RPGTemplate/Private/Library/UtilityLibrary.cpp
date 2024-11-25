@@ -1,6 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 #include "RPGTemplate/Public/Library/UtilityLibrary.h"
 #include "RPGTemplate/Public/DataType/Enum/ELogType.h"
+#include "RPGTemplate/Public/DataType/Enum/EBranchType.h"
 
 void UUtilityLibrary::PrintLog(FString Text, ELogType logType, UObject* Object, float Time)
 {
@@ -10,7 +11,7 @@ void UUtilityLibrary::PrintLog(FString Text, ELogType logType, UObject* Object, 
 		if (IsValid(Object) && Object->GetClass()) {
 			name = "[" + Object->GetClass()->GetName() + "] ";
 		}
-
+		
 		FColor color = FColor::Blue;
 
 		FString prefix;
@@ -37,5 +38,35 @@ void UUtilityLibrary::PrintLog(FString Text, ELogType logType, UObject* Object, 
 
 		GEngine->AddOnScreenDebugMessage(-1, Time, color, content);
 
+	}
+}
+
+FString UUtilityLibrary::GetRandomAlphaDigit(int Length)
+{
+	const char letters[] =
+		"0123456789"
+		"ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+		"abcdefghijklmnopqrstuvwxyz";
+	const int lettersSize = 62;
+
+	FString randomString;
+
+	for (int i = 0; i < Length; i++) {
+		randomString += letters[FMath::RandRange(0, lettersSize - 1)];
+	}
+
+	return randomString;
+
+}
+
+void UUtilityLibrary::NBranch(bool Condition, TEnumAsByte<EBranchType>& Branches)
+{
+	if(!Condition)
+	{
+		Branches = EBranchType::OnTrue;
+	}
+	else
+	{
+		Branches = EBranchType::OnFalse;
 	}
 }

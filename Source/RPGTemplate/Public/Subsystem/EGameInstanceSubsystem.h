@@ -7,7 +7,7 @@
 #include "EGameInstanceSubsystem.generated.h"
 
 /**
- * , Meta=(ShowWorldContextPin)
+ *
  */
 UCLASS(Blueprintable)
 class RPGTEMPLATE_API UEGameInstanceSubsystem : public UGameInstanceSubsystem
@@ -16,8 +16,11 @@ class RPGTEMPLATE_API UEGameInstanceSubsystem : public UGameInstanceSubsystem
 
 public:
 
-	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Enhanced Game Instance Subsystem")
-	void CreateInstance();
+	UFUNCTION(BlueprintCallable, Category = "Enhanced Game Instance Subsystem")
+	void Construct();
+
+	UFUNCTION(BlueprintImplementableEvent, Category = "Enhanced Game Instance Subsystem")
+	void OnConstructed();
 
 	UFUNCTION(BlueprintCallable, Category = "Enhanced Game Instance Subsystem")
 	void AsyncLoadAsset(TSoftObjectPtr<UObject> Object);

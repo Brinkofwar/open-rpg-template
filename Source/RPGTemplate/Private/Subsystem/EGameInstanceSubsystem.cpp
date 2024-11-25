@@ -10,11 +10,15 @@ bool UEGameInstanceSubsystem::ShouldCreateSubsystem(UObject* object) const {
 	return false;
 }
 
+void UEGameInstanceSubsystem::Construct()
+{
+	OnConstructed();
+}
+
 void UEGameInstanceSubsystem::AsyncLoadAsset(TSoftObjectPtr<UObject> Object)
 {
 
 	FSoftObjectPath path = Object.ToSoftObjectPath();
-
 	FStreamableManager streamableManager;
 
 	streamableManager.RequestAsyncLoad(
