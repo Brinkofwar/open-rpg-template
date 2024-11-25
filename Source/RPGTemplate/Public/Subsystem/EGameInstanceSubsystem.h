@@ -7,7 +7,7 @@
 #include "EGameInstanceSubsystem.generated.h"
 
 /**
- * 
+ * , Meta=(ShowWorldContextPin)
  */
 UCLASS(Blueprintable)
 class RPGTEMPLATE_API UEGameInstanceSubsystem : public UGameInstanceSubsystem
@@ -15,12 +15,18 @@ class RPGTEMPLATE_API UEGameInstanceSubsystem : public UGameInstanceSubsystem
 	GENERATED_BODY()
 
 public:
+
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Enhanced Game Instance Subsystem")
 	void CreateInstance();
 
+	UFUNCTION(BlueprintCallable, Category = "Enhanced Game Instance Subsystem")
+	void AsyncLoadAsset(TSoftObjectPtr<UObject> Object);
+
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAssetLoaded, UObject*, LoadedAsset);
+	UPROPERTY(BlueprintAssignable, Category = "Enhanced Game Instance Subsystem|Event Dispatcher")
+	FOnAssetLoaded OnAssetLoaded;
+
 protected:
-
-
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
 	virtual void Deinitialize() override;
 	virtual bool ShouldCreateSubsystem(UObject* object) const override;
