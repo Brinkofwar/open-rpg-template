@@ -16,11 +16,14 @@ class RPGTEMPLATE_API UEGameInstanceSubsystem : public UGameInstanceSubsystem
 
 public:
 
-	UFUNCTION(BlueprintCallable, Category = "Enhanced Game Instance Subsystem")
-	void Construct();
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Enhanced Game Instance Subsystem")
+	void Begin();
 
 	UFUNCTION(BlueprintImplementableEvent, Category = "Enhanced Game Instance Subsystem")
-	void OnConstructed();
+	void OnInitialized();
+
+	UFUNCTION(BlueprintImplementableEvent, Category = "Enhanced Game Instance Subsystem")
+	void OnDeinitialized();
 
 	UFUNCTION(BlueprintCallable, Category = "Enhanced Game Instance Subsystem")
 	void AsyncLoadAsset(TSoftObjectPtr<UObject> Object);

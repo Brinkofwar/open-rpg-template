@@ -10,11 +10,6 @@ bool UEGameInstanceSubsystem::ShouldCreateSubsystem(UObject* object) const {
 	return false;
 }
 
-void UEGameInstanceSubsystem::Construct()
-{
-	OnConstructed();
-}
-
 void UEGameInstanceSubsystem::AsyncLoadAsset(TSoftObjectPtr<UObject> Object)
 {
 
@@ -41,9 +36,11 @@ void UEGameInstanceSubsystem::AsyncLoadAsset(TSoftObjectPtr<UObject> Object)
 void UEGameInstanceSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
 	Super::Initialize(Collection);
+	OnInitialized();
 }
 
 void UEGameInstanceSubsystem::Deinitialize()
 {
 	Super::Deinitialize();
+	OnDeinitialized();
 }
