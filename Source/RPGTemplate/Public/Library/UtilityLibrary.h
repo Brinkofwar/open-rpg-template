@@ -4,8 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
-#include "RPGTemplate/Public/DataType/Enum/ELogType.h"
-#include "RPGTemplate/Public/DataType/Enum/EBranchType.h"
+#include "DataType/Enum/ELogType.h"
+#include "DataType/Enum/EBranchType.h"
 #include "UtilityLibrary.generated.h"
 
 /**

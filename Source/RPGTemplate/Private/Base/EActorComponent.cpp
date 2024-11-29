@@ -33,3 +33,34 @@ void UEActorComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 	// ...
 }
 
+void UEActorComponent::OnArbitraryRequested_Implementation(FGameplayTag ChannelID, FInstancedStruct Parameters) {}
+void UEActorComponent::OnArbitraryResponded_Implementation(FGameplayTag ChannelID, FInstancedStruct Parameters) {}
+
+bool UEActorComponent::AddTag(FGameplayTag Tag)
+{
+	if (!GameplayTags.HasTag(Tag)) {
+		GameplayTags.AddTag(Tag);
+		OnTagAdded(Tag);
+		OnTagAdd.Broadcast(Tag);
+		return true;
+	}
+	return false;
+}
+
+bool UEActorComponent::RemoveTag(FGameplayTag Tag)
+{
+	if (GameplayTags.RemoveTag(Tag)) {
+		OnTagRemoved(Tag);
+		OnTagRemove.Broadcast(Tag);
+		return true;
+	}
+	return false;
+}
+
+bool UEActorComponent::HasAnyTags(FGameplayTagContainer Tag, bool ExactMatch) const
+{
+	return (ExactMatch) ? GameplayTags.HasAnyExact(Tag) : GameplayTags.HasAny(Tag);
+}
+
+void UEActorComponent::OnTagAdded_Implementation(FGameplayTag Tag) {}
+void UEActorComponent::OnTagRemoved_Implementation(FGameplayTag Tag) {}

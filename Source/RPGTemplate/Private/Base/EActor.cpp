@@ -29,3 +29,35 @@ void AEActor::Tick(float DeltaTime)
 
 }
 
+void AEActor::OnArbitraryRequested_Implementation(FGameplayTag ChannelID, FInstancedStruct Parameters) {}
+void AEActor::OnArbitraryResponded_Implementation(FGameplayTag ChannelID, FInstancedStruct Parameters) {}
+
+bool AEActor::AddTag(FGameplayTag Tag)
+{
+	if (!GameplayTags.HasTag(Tag)) {
+		GameplayTags.AddTag(Tag);
+		OnTagAdded(Tag);
+		OnTagAdd.Broadcast(Tag);
+		return true;
+	}
+	return false;
+}
+
+bool AEActor::RemoveTag(FGameplayTag Tag)
+{
+	if (GameplayTags.RemoveTag(Tag)) {
+		OnTagRemoved(Tag);
+		OnTagRemove.Broadcast(Tag);
+		return true;
+	}
+	return false;
+}
+
+bool AEActor::HasAnyTags(FGameplayTagContainer Tag, bool ExactMatch)
+{
+	return (ExactMatch) ? GameplayTags.HasAnyExact(Tag) : GameplayTags.HasAny(Tag);
+}
+
+void AEActor::OnTagAdded_Implementation(FGameplayTag Tag) {}
+void AEActor::OnTagRemoved_Implementation(FGameplayTag Tag) {}
+

@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
-#include "RPGTemplate/Public/Library/UtilityLibrary.h"
-#include "RPGTemplate/Public/DataType/Enum/ELogType.h"
-#include "RPGTemplate/Public/DataType/Enum/EBranchType.h"
+#include "Library/UtilityLibrary.h"
+#include "DataType/Enum/ELogType.h"
+#include "DataType/Enum/EBranchType.h"
 
 void UUtilityLibrary::PrintLog(FString Text, ELogType logType, UObject* Object, float Time)
 {
