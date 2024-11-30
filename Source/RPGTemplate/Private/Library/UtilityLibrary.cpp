@@ -70,3 +70,40 @@ void UUtilityLibrary::NBranch(bool Condition, TEnumAsByte<EBranchType>& Branches
 		Branches = EBranchType::OnFalse;
 	}
 }
+
+int32 UUtilityLibrary::GetLargestInteger(const TArray<int32>& TargetArray)
+{
+	int32 num = 0;
+
+	for (int32 x : TargetArray)
+	{
+		if (x > num)
+		{
+			num = x;
+		}
+	}
+
+	return num;
+}
+
+FName UUtilityLibrary::TextToName(const FText& Text)
+{
+	return FName(*Text.ToString());
+}
+
+UGameInstanceSubsystem* UUtilityLibrary::GetGameInstanceSubsystemOfClass(const UObject* WorldContextObject, TSubclassOf<UGameInstanceSubsystem> SubsystemClass)
+{
+	if (!WorldContextObject || !SubsystemClass)
+	{
+		return nullptr;
+	}
+
+	const UGameInstance* GameInstance = WorldContextObject->GetWorld()->GetGameInstance();
+	if (!GameInstance)
+	{
+		return nullptr;
+	}
+	
+	return GameInstance->GetSubsystemBase(SubsystemClass);
+
+}

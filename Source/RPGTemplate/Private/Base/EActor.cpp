@@ -32,6 +32,17 @@ void AEActor::Tick(float DeltaTime)
 void AEActor::OnArbitraryRequested_Implementation(FGameplayTag ChannelID, FInstancedStruct Parameters) {}
 void AEActor::OnArbitraryResponded_Implementation(FGameplayTag ChannelID, FInstancedStruct Parameters) {}
 
+
+
+//bool AEActor::CreateDynFunction(FDynFunctionDelegate Function, float UpperBorder)
+//{
+//	bool result;
+//	if (Function.IsBound()) {
+//		Function.ExecuteIfBound(UpperBorder, result);
+//	}
+//	return result;
+//}
+
 bool AEActor::AddTag(FGameplayTag Tag)
 {
 	if (!GameplayTags.HasTag(Tag)) {

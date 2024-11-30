@@ -48,7 +48,7 @@ public:
 	FOnArbitraryRequest OnArbitraryRequest;
 
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnArbitraryResponse, FGameplayTag, ChannelID, FInstancedStruct, Parameters);
-	UPROPERTY(BlueprintAssignable, Category = "EObject|Event Dispatcher")
+	UPROPERTY(BlueprintAssignable, BlueprintCallable, Category = "EObject|Event Dispatcher")
 	FOnArbitraryResponse OnArbitraryResponse;
 
 #pragma endregion Arbitrary

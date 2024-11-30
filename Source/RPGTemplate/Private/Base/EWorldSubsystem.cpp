@@ -1,9 +1,9 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "Base/EGameInstanceSubsystem.h"
+#include "Base/EWorldSubsystem.h"
 #include <Engine/StreamableManager.h>
 
-bool UEGameInstanceSubsystem::ShouldCreateSubsystem(UObject* object) const
+bool UEWorldSubsystem::ShouldCreateSubsystem(UObject* object) const
 {
 
 	if (this->GetClass()->IsInBlueprint() && Super::ShouldCreateSubsystem(object)) {
@@ -13,17 +13,9 @@ bool UEGameInstanceSubsystem::ShouldCreateSubsystem(UObject* object) const
 
 }
 
-/*
-* Since the Game Instance Subsystem doesnt interact with the world.
-*/
-UWorld* UEGameInstanceSubsystem::GetWorld() const
+void UEWorldSubsystem::AsyncLoadAsset(TSoftObjectPtr<UObject> Object)
 {
-	return nullptr;
-}
 
-void UEGameInstanceSubsystem::AsyncLoadAsset(TSoftObjectPtr<UObject> Object)
-{
-	
 	FSoftObjectPath path = Object.ToSoftObjectPath();
 	FStreamableManager streamableManager;
 
@@ -35,17 +27,17 @@ void UEGameInstanceSubsystem::AsyncLoadAsset(TSoftObjectPtr<UObject> Object)
 			return;
 		}
 		OnAssetLoaded.Broadcast(loadedAsset);
-	}), 0,false);
+		}), 0, false);
 
 }
 
-void UEGameInstanceSubsystem::Initialize(FSubsystemCollectionBase& Collection)
+void UEWorldSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
 	Super::Initialize(Collection);
 	OnInitialized();
 }
 
-void UEGameInstanceSubsystem::Deinitialize()
+void UEWorldSubsystem::Deinitialize()
 {
 	Super::Deinitialize();
 	OnDeinitialized();

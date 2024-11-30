@@ -41,7 +41,7 @@ public:
 #pragma region Arbitrary
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "EActor")
-	void ArbitraryChannel(FGameplayTag ChannelID, FInstancedStruct Parameters, FGameplayTag&Out_ChannelID, FInstancedStruct &Out_Parameters);
+	void ArbitraryChannel(FGameplayTag ChannelID, FInstancedStruct Parameters, FGameplayTag &Out_ChannelID, FInstancedStruct &Out_Parameters);
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "EActor")
 	void OnArbitraryRequested(FGameplayTag ChannelID, FInstancedStruct Parameters);
@@ -56,8 +56,14 @@ public:
 	FOnArbitraryRequest OnArbitraryRequest;
 
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnArbitraryResponse, FGameplayTag, ChannelID, FInstancedStruct, Parameters);
-	UPROPERTY(BlueprintAssignable, Category = "EActor|Event Dispatcher")
+	UPROPERTY(BlueprintAssignable, BlueprintCallable, Category = "EActor|Event Dispatcher")
 	FOnArbitraryResponse OnArbitraryResponse;
+
+
+	//DECLARE_DYNAMIC_DELEGATE_TwoParams(FDynFunctionDelegate, float, InputValue, bool&, OutputValue);
+	//UFUNCTION(BlueprintCallable)
+	//bool CreateDynFunction(FDynFunctionDelegate Function, float UpperBorder);
+
 
 #pragma endregion Arbitrary
 
