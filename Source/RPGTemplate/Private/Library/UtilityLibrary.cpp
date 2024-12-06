@@ -2,6 +2,8 @@
 #include "Library/UtilityLibrary.h"
 #include "DataType/Enum/ELogType.h"
 #include "DataType/Enum/EBranchType.h"
+#include "GameplayEffect.h"
+#include "GameplayEffectExtension.h"
 
 void UUtilityLibrary::PrintLog(FString Text, ELogType logType, UObject* Object, float Time)
 {
@@ -106,4 +108,9 @@ UGameInstanceSubsystem* UUtilityLibrary::GetGameInstanceSubsystemOfClass(const U
 	
 	return GameInstance->GetSubsystemBase(SubsystemClass);
 
+}
+
+FGameplayEffectContextHandle UUtilityLibrary::GetContext(const FGameplayEffectSpec& InEffectSpec)
+{
+	return InEffectSpec.GetContext();
 }

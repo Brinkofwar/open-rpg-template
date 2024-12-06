@@ -1,7 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Base/EGameInstanceSubsystem.h"
-#include <Engine/StreamableManager.h>
 
 bool UEGameInstanceSubsystem::ShouldCreateSubsystem(UObject* object) const
 {
@@ -19,24 +18,6 @@ bool UEGameInstanceSubsystem::ShouldCreateSubsystem(UObject* object) const
 UWorld* UEGameInstanceSubsystem::GetWorld() const
 {
 	return nullptr;
-}
-
-void UEGameInstanceSubsystem::AsyncLoadAsset(TSoftObjectPtr<UObject> Object)
-{
-	
-	FSoftObjectPath path = Object.ToSoftObjectPath();
-	FStreamableManager streamableManager;
-
-	streamableManager.RequestAsyncLoad(path, FStreamableDelegate::CreateLambda([this, path] {
-		UObject* loadedAsset = path.ResolveObject();
-		if (!loadedAsset)
-		{
-			UE_LOG(LogTemp, Warning, TEXT("Failed to load asset: %s"), *path.ToString());
-			return;
-		}
-		OnAssetLoaded.Broadcast(loadedAsset);
-	}), 0,false);
-
 }
 
 void UEGameInstanceSubsystem::Initialize(FSubsystemCollectionBase& Collection)

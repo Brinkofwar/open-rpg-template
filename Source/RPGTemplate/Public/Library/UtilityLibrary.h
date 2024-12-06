@@ -6,6 +6,8 @@
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "DataType/Enum/ELogType.h"
 #include "DataType/Enum/EBranchType.h"
+#include "GameplayEffect.h"
+#include "GameplayEffectExtension.h"
 #include "UtilityLibrary.generated.h"
 
 /**
@@ -33,5 +35,9 @@ class RPGTEMPLATE_API UUtilityLibrary : public UBlueprintFunctionLibrary
 
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "EUtility|Subsystem", meta = (WorldContext = "WorldContextObject"))
 	static UGameInstanceSubsystem* GetGameInstanceSubsystemOfClass(const UObject* WorldContextObject, TSubclassOf<UGameInstanceSubsystem> SubsystemClass);
+
+
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "EUtility")
+	static FGameplayEffectContextHandle GetContext(const FGameplayEffectSpec& InEffectSpec);
 
 };
