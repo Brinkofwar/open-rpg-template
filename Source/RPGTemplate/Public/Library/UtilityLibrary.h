@@ -36,7 +36,6 @@ class RPGTEMPLATE_API UUtilityLibrary : public UBlueprintFunctionLibrary
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "EUtility|Subsystem", meta = (WorldContext = "WorldContextObject"))
 	static UGameInstanceSubsystem* GetGameInstanceSubsystemOfClass(const UObject* WorldContextObject, TSubclassOf<UGameInstanceSubsystem> SubsystemClass);
 
-
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "EUtility")
 	static FGameplayEffectContextHandle GetContext(const FGameplayEffectSpec& InEffectSpec);
 

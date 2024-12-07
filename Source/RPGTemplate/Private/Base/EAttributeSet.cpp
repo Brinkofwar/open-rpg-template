@@ -1,38 +1,38 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "GameplayAbility/Attribute/BaseAttributeSet.h"
+#include "Base/EAttributeSet.h"
 #include "GameplayEffect.h"
 #include "GameplayEffectExtension.h"
 #include "DataType/Struct/BEGameplayModifierEvaluatedData.h"
 
 
-void UBaseAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue)
+void UEAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue)
 {
 
 	Super::PreAttributeChange(Attribute, NewValue);
-	if (AllowBlueprintExecution) {
+	if (AllowBlueprintExecution()) {
 		NewValue = OnPreAttributeChange(Attribute, NewValue);
 	}
 
 }
 
-void UBaseAttributeSet::PostAttributeChange(const FGameplayAttribute& Attribute, float OldValue, float NewValue)
+void UEAttributeSet::PostAttributeChange(const FGameplayAttribute& Attribute, float OldValue, float NewValue)
 {
 
 	Super::PostAttributeChange(Attribute, OldValue, NewValue);
-	if (AllowBlueprintExecution) {
+	if (AllowBlueprintExecution()) {
 		OnPostAttributeChange(Attribute, OldValue, NewValue);
 	}
 
 }
 
-void UBaseAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data)
+void UEAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data)
 {
 
 	Super::PostGameplayEffectExecute(Data);
 
-	if (AllowBlueprintExecution) {
+	if (AllowBlueprintExecution()) {
 
 		FBEGameplayModifierEvaluatedData evaluatedData;
 		evaluatedData.Attribute = Data.EvaluatedData.Attribute;
@@ -45,32 +45,23 @@ void UBaseAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 
 }
 
-
-void UBaseAttributeSet::SetAttribute(FGameplayAttribute Attribute, float NewValue)
+void UEAttributeSet::SetAttribute(FGameplayAttribute Attribute, float NewValue)
 {
 
 	if (!Attribute.IsValid()) {
 		return;
 	}
 
-	SET_ATTRIBUTE(Health);
-	SET_ATTRIBUTE(HealthMax);
-
 }
 
 
-float UBaseAttributeSet::GetAttribute(FGameplayAttribute Attribute) const
+float UEAttributeSet::GetAttribute(FGameplayAttribute Attribute) const
 {
 
-	float value = 0.0f;
-
 	if (!Attribute.IsValid()) {
-		return value;
+		return 0.0f;
 	}
 
-	GET_ATTRIBUTE(Health);
-	GET_ATTRIBUTE(HealthMax);
-
-	return value;
+	return 0.0f;
 
 }
