@@ -4,6 +4,9 @@
 #include "DataType/Enum/EBranchType.h"
 #include "GameplayEffect.h"
 #include "GameplayEffectExtension.h"
+#include "InputActionValue.h"
+#include "Component/ReplicatedAction.h"
+#include "GameFramework/Character.h"
 
 void UUtilityLibrary::PrintLog(FString Text, ELogType logType, UObject* Object, float Time)
 {
@@ -113,4 +116,64 @@ UGameInstanceSubsystem* UUtilityLibrary::GetGameInstanceSubsystemOfClass(const U
 FGameplayEffectContextHandle UUtilityLibrary::GetContext(const FGameplayEffectSpec& InEffectSpec)
 {
 	return InEffectSpec.GetContext();
+}
+
+FGameplayTag UUtilityLibrary::MakeGameplayTagFromText(FText Text)
+{
+	FGameplayTag tag = FGameplayTag::RequestGameplayTag(FName(*Text.ToString()));
+	if (tag.IsValid()) {
+		return tag;
+	}
+	return FGameplayTag();
+}
+
+float UUtilityLibrary::GetActionValueFloat(const FInputActionValue& ActionValue)
+{
+	return ActionValue.Get<float>();
+}
+
+FVector UUtilityLibrary::GetActionValueVector(const FInputActionValue& ActionValue)
+{
+	return ActionValue.Get<FVector>();
+}
+
+bool UUtilityLibrary::HasReplicatedActionComponent(ACharacter* Character)
+{
+	if (!Character) {
+		return false;
+	}
+
+	UActorComponent* actionComponent = Character->GetComponentByClass(UReplicatedAction::StaticClass());
+
+	if (!actionComponent) {
+		return false;
+	}
+
+	return true;
+}
+
+UReplicatedAction* UUtilityLibrary::GetReplicatedActionComponent(ACharacter* Character)
+{
+	if (!Character) {
+		return nullptr;
+	}
+
+	UActorComponent* actionComponent = Character->GetComponentByClass(UReplicatedAction::StaticClass());
+
+	if (!actionComponent) {
+		return nullptr;
+	}
+
+	UReplicatedAction* replicatedAction = Cast<UReplicatedAction>(actionComponent);
+
+	if (!replicatedAction) {
+		return nullptr;
+	}
+
+	return replicatedAction;
+}
+
+bool UUtilityLibrary::GetActionValueBool(const FInputActionValue& ActionValue)
+{
+	return ActionValue.Get<bool>();
 }
