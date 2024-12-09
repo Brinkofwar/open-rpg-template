@@ -43,7 +43,7 @@ public:
 	void SArbitraryRequest_Implementation(FGameplayTag ChannelID, FInstancedStruct Parameters);
 	bool SArbitraryRequest_Validate(FGameplayTag ChannelID, FInstancedStruct Parameters);
 
-	UFUNCTION(NetMulticast, Reliable, DisplayName = "Enhanced Actor Component|@Client ArbitraryRequest", Category = "EActorComponent")
+	UFUNCTION(NetMulticast, Reliable, Category = "EActorComponent")
 	void CArbitraryRequest(FGameplayTag ChannelID, FInstancedStruct Parameters);
 	void CArbitraryRequest_Implementation(FGameplayTag ChannelID, FInstancedStruct Parameters);
 
@@ -52,20 +52,18 @@ public:
 	void SArbitraryResponse_Implementation(FGameplayTag ChannelID, FInstancedStruct Parameters);
 	bool SArbitraryResponse_Validate(FGameplayTag ChannelID, FInstancedStruct Parameters);
 
-	UFUNCTION(NetMulticast, Reliable, DisplayName = "Enhanced Actor Component|@Client ArbitraryResponse", Category = "EActorComponent")
+	UFUNCTION(NetMulticast, Reliable, Category = "EActorComponent")
 	void CArbitraryResponse(FGameplayTag ChannelID, FInstancedStruct Parameters);
 	void CArbitraryResponse_Implementation(FGameplayTag ChannelID, FInstancedStruct Parameters);
 
-
-
-	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "EActorComponent")
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCosmetic, BlueprintCallable, Category = "EActorComponent")
 	void ArbitraryChannel(FGameplayTag ChannelID, FInstancedStruct Parameters, FGameplayTag& Out_ChannelID, FInstancedStruct& Out_Parameters);
 
-	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "EActorComponent")
+	UFUNCTION(BlueprintNativeEvent, BlueprintCosmetic, BlueprintCallable, Category = "EActorComponent")
 	void OnArbitraryRequested(FGameplayTag ChannelID, FInstancedStruct Parameters);
 	virtual void OnArbitraryRequested_Implementation(FGameplayTag ChannelID, FInstancedStruct Parameters);
 
-	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "EActorComponent")
+	UFUNCTION(BlueprintNativeEvent, BlueprintCosmetic, BlueprintCallable, Category = "EActorComponent")
 	void OnArbitraryResponded(FGameplayTag ChannelID, FInstancedStruct Parameters);
 	virtual void OnArbitraryResponded_Implementation(FGameplayTag ChannelID, FInstancedStruct Parameters);
 
@@ -85,7 +83,7 @@ public:
 	void SAddGameplayTag_Implementation(FGameplayTag Tag);
 	bool SAddGameplayTag_Validate(FGameplayTag Tag);
 
-	UFUNCTION(NetMulticast, Reliable, Category = "EActorComponent|Gameplay Tag")
+	UFUNCTION(NetMulticast, Reliable)
 	void CAddGameplayTag(FGameplayTag Tag);
 	void CAddGameplayTag_Implementation(FGameplayTag Tag);
 
@@ -95,7 +93,7 @@ public:
 	void SRemoveGameplayTag_Implementation(FGameplayTag Tag);
 	bool SRemoveGameplayTag_Validate(FGameplayTag Tag);
 
-	UFUNCTION(NetMulticast, Reliable, Category = "EActorComponent|Gameplay Tag")
+	UFUNCTION(NetMulticast, Reliable)
 	void CRemoveGameplayTag(FGameplayTag Tag);
 	void CRemoveGameplayTag_Implementation(FGameplayTag Tag);
 

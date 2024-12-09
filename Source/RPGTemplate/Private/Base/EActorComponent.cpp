@@ -2,6 +2,11 @@
 
 
 #include "Base/EActorComponent.h"
+#include "Components/ActorComponent.h"
+#include "GameplayTagsManager.h"
+#include "GameplayTagContainer.h"
+#include "InstancedStruct.h"
+#include "Macro/EMacro.h"
 
 // Sets default values for this component's properties
 UEActorComponent::UEActorComponent()
@@ -33,56 +38,59 @@ void UEActorComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 	// ...
 }
 
-void UEActorComponent::SArbitraryRequest_Implementation(FGameplayTag ChannelID, FInstancedStruct Parameters)
-{
-	CArbitraryRequest(ChannelID, Parameters);
-}
-bool UEActorComponent::SArbitraryRequest_Validate(FGameplayTag ChannelID, FInstancedStruct Parameters)
-{
-	return ChannelID.IsValid();
-}
-void UEActorComponent::CArbitraryRequest_Implementation(FGameplayTag ChannelID, FInstancedStruct Parameters)
-{
-	OnArbitraryRequest.Broadcast(ChannelID, Parameters);
-}
-void UEActorComponent::SArbitraryResponse_Implementation(FGameplayTag ChannelID, FInstancedStruct Parameters)
-{
-	CArbitraryResponse(ChannelID, Parameters);
-}
-bool UEActorComponent::SArbitraryResponse_Validate(FGameplayTag ChannelID, FInstancedStruct Parameters)
-{
-	return ChannelID.IsValid();
-}
-void UEActorComponent::CArbitraryResponse_Implementation(FGameplayTag ChannelID, FInstancedStruct Parameters)
-{
-	OnArbitraryResponse.Broadcast(ChannelID, Parameters);
-}
-void UEActorComponent::OnArbitraryRequested_Implementation(FGameplayTag ChannelID, FInstancedStruct Parameters) {}
-void UEActorComponent::OnArbitraryResponded_Implementation(FGameplayTag ChannelID, FInstancedStruct Parameters) {}
+EARBITRARY_MACRO(UEActorComponent)
+EGAMEPLAYTAG_MACRO(UEActorComponent)
+
+//void UEActorComponent::SArbitraryRequest_Implementation(FGameplayTag ChannelID, FInstancedStruct Parameters)
+//{
+//	CArbitraryRequest(ChannelID, Parameters);
+//}
+//bool UEActorComponent::SArbitraryRequest_Validate(FGameplayTag ChannelID, FInstancedStruct Parameters)
+//{
+//	return ChannelID.IsValid();
+//}
+//void UEActorComponent::CArbitraryRequest_Implementation(FGameplayTag ChannelID, FInstancedStruct Parameters)
+//{
+//	OnArbitraryRequest.Broadcast(ChannelID, Parameters);
+//}
+//void UEActorComponent::SArbitraryResponse_Implementation(FGameplayTag ChannelID, FInstancedStruct Parameters)
+//{
+//	CArbitraryResponse(ChannelID, Parameters);
+//}
+//bool UEActorComponent::SArbitraryResponse_Validate(FGameplayTag ChannelID, FInstancedStruct Parameters)
+//{
+//	return ChannelID.IsValid();
+//}
+//void UEActorComponent::CArbitraryResponse_Implementation(FGameplayTag ChannelID, FInstancedStruct Parameters)
+//{
+//	OnArbitraryResponse.Broadcast(ChannelID, Parameters);
+//}
+//void UEActorComponent::OnArbitraryRequested_Implementation(FGameplayTag ChannelID, FInstancedStruct Parameters) {}
+//void UEActorComponent::OnArbitraryResponded_Implementation(FGameplayTag ChannelID, FInstancedStruct Parameters) {}
 
 
 
-void UEActorComponent::SAddGameplayTag_Implementation(FGameplayTag Tag)
-{
-	CAddGameplayTag(Tag);
-}
-bool UEActorComponent::SAddGameplayTag_Validate(FGameplayTag Tag)
-{
-	return Tag.IsValid();
-}
-void UEActorComponent::CAddGameplayTag_Implementation(FGameplayTag Tag)
-{
-	OnTagAdded.Broadcast(Tag);
-}
-void UEActorComponent::SRemoveGameplayTag_Implementation(FGameplayTag Tag)
-{
-	CRemoveGameplayTag(Tag);
-}
-bool UEActorComponent::SRemoveGameplayTag_Validate(FGameplayTag Tag)
-{
-	return Tag.IsValid();
-}
-void UEActorComponent::CRemoveGameplayTag_Implementation(FGameplayTag Tag)
-{
-	OnTagRemoved.Broadcast(Tag);
-}
+//void UEActorComponent::SAddGameplayTag_Implementation(FGameplayTag Tag)
+//{
+//	CAddGameplayTag(Tag);
+//}
+//bool UEActorComponent::SAddGameplayTag_Validate(FGameplayTag Tag)
+//{
+//	return Tag.IsValid();
+//}
+//void UEActorComponent::CAddGameplayTag_Implementation(FGameplayTag Tag)
+//{
+//	OnTagAdded.Broadcast(Tag);
+//}
+//void UEActorComponent::SRemoveGameplayTag_Implementation(FGameplayTag Tag)
+//{
+//	CRemoveGameplayTag(Tag);
+//}
+//bool UEActorComponent::SRemoveGameplayTag_Validate(FGameplayTag Tag)
+//{
+//	return Tag.IsValid();
+//}
+//void UEActorComponent::CRemoveGameplayTag_Implementation(FGameplayTag Tag)
+//{
+//	OnTagRemoved.Broadcast(Tag);
+//}
