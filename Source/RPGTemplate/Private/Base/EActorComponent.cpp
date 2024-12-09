@@ -33,34 +33,56 @@ void UEActorComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 	// ...
 }
 
+void UEActorComponent::SArbitraryRequest_Implementation(FGameplayTag ChannelID, FInstancedStruct Parameters)
+{
+	CArbitraryRequest(ChannelID, Parameters);
+}
+bool UEActorComponent::SArbitraryRequest_Validate(FGameplayTag ChannelID, FInstancedStruct Parameters)
+{
+	return ChannelID.IsValid();
+}
+void UEActorComponent::CArbitraryRequest_Implementation(FGameplayTag ChannelID, FInstancedStruct Parameters)
+{
+	OnArbitraryRequest.Broadcast(ChannelID, Parameters);
+}
+void UEActorComponent::SArbitraryResponse_Implementation(FGameplayTag ChannelID, FInstancedStruct Parameters)
+{
+	CArbitraryResponse(ChannelID, Parameters);
+}
+bool UEActorComponent::SArbitraryResponse_Validate(FGameplayTag ChannelID, FInstancedStruct Parameters)
+{
+	return ChannelID.IsValid();
+}
+void UEActorComponent::CArbitraryResponse_Implementation(FGameplayTag ChannelID, FInstancedStruct Parameters)
+{
+	OnArbitraryResponse.Broadcast(ChannelID, Parameters);
+}
 void UEActorComponent::OnArbitraryRequested_Implementation(FGameplayTag ChannelID, FInstancedStruct Parameters) {}
 void UEActorComponent::OnArbitraryResponded_Implementation(FGameplayTag ChannelID, FInstancedStruct Parameters) {}
 
-bool UEActorComponent::AddTag(FGameplayTag Tag)
-{
-	if (!GameplayTags.HasTag(Tag)) {
-		GameplayTags.AddTag(Tag);
-		OnTagAdded(Tag);
-		OnTagAdd.Broadcast(Tag);
-		return true;
-	}
-	return false;
-}
 
-bool UEActorComponent::RemoveTag(FGameplayTag Tag)
-{
-	if (GameplayTags.RemoveTag(Tag)) {
-		OnTagRemoved(Tag);
-		OnTagRemove.Broadcast(Tag);
-		return true;
-	}
-	return false;
-}
 
-bool UEActorComponent::HasAnyTags(FGameplayTagContainer Tag, bool ExactMatch) const
+void UEActorComponent::SAddGameplayTag_Implementation(FGameplayTag Tag)
 {
-	return (ExactMatch) ? GameplayTags.HasAnyExact(Tag) : GameplayTags.HasAny(Tag);
+	CAddGameplayTag(Tag);
 }
-
-void UEActorComponent::OnTagAdded_Implementation(FGameplayTag Tag) {}
-void UEActorComponent::OnTagRemoved_Implementation(FGameplayTag Tag) {}
+bool UEActorComponent::SAddGameplayTag_Validate(FGameplayTag Tag)
+{
+	return Tag.IsValid();
+}
+void UEActorComponent::CAddGameplayTag_Implementation(FGameplayTag Tag)
+{
+	OnTagAdded.Broadcast(Tag);
+}
+void UEActorComponent::SRemoveGameplayTag_Implementation(FGameplayTag Tag)
+{
+	CRemoveGameplayTag(Tag);
+}
+bool UEActorComponent::SRemoveGameplayTag_Validate(FGameplayTag Tag)
+{
+	return Tag.IsValid();
+}
+void UEActorComponent::CRemoveGameplayTag_Implementation(FGameplayTag Tag)
+{
+	OnTagRemoved.Broadcast(Tag);
+}

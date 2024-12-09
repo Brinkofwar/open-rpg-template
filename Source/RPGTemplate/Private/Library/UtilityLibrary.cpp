@@ -137,13 +137,13 @@ FVector UUtilityLibrary::GetActionValueVector(const FInputActionValue& ActionVal
 	return ActionValue.Get<FVector>();
 }
 
-bool UUtilityLibrary::HasReplicatedActionComponent(ACharacter* Character)
+bool UUtilityLibrary::HasReplicatedActionComponent(AActor* Actor)
 {
-	if (!Character) {
+	if (!Actor) {
 		return false;
 	}
 
-	UActorComponent* actionComponent = Character->GetComponentByClass(UReplicatedAction::StaticClass());
+	UActorComponent* actionComponent = Actor->GetComponentByClass(UReplicatedAction::StaticClass());
 
 	if (!actionComponent) {
 		return false;
@@ -152,13 +152,13 @@ bool UUtilityLibrary::HasReplicatedActionComponent(ACharacter* Character)
 	return true;
 }
 
-UReplicatedAction* UUtilityLibrary::GetReplicatedActionComponent(ACharacter* Character)
+UReplicatedAction* UUtilityLibrary::GetReplicatedActionComponent(AActor* Actor)
 {
-	if (!Character) {
+	if (!Actor) {
 		return nullptr;
 	}
 
-	UActorComponent* actionComponent = Character->GetComponentByClass(UReplicatedAction::StaticClass());
+	UActorComponent* actionComponent = Actor->GetComponentByClass(UReplicatedAction::StaticClass());
 
 	if (!actionComponent) {
 		return nullptr;

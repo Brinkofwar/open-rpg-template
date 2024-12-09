@@ -54,10 +54,10 @@ class RPGTEMPLATE_API UUtilityLibrary : public UBlueprintFunctionLibrary
 	static FVector GetActionValueVector(const FInputActionValue& ActionValue);
 
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "EUtility|Replication", meta = (DefaultToSelf = "Character"))
-	static bool HasReplicatedActionComponent(ACharacter* Character);
+	static bool HasReplicatedActionComponent(AActor* Actor);
 
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "EUtility|Replication", meta = (DefaultToSelf = "Character"))
-	static UReplicatedAction* GetReplicatedActionComponent(ACharacter* Character);
+	static UReplicatedAction* GetReplicatedActionComponent(AActor* Actor);
 
 
 };

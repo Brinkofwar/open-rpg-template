@@ -38,6 +38,26 @@ public:
 
 #pragma region Arbitrary
 
+	UFUNCTION(BlueprintAuthorityOnly, BlueprintCallable, Server, Reliable, WithValidation, DisplayName = "Arbitrary Request", Category = "EActorComponent")
+	void SArbitraryRequest(FGameplayTag ChannelID, FInstancedStruct Parameters);
+	void SArbitraryRequest_Implementation(FGameplayTag ChannelID, FInstancedStruct Parameters);
+	bool SArbitraryRequest_Validate(FGameplayTag ChannelID, FInstancedStruct Parameters);
+
+	UFUNCTION(NetMulticast, Reliable, DisplayName = "Enhanced Actor Component|@Client ArbitraryRequest", Category = "EActorComponent")
+	void CArbitraryRequest(FGameplayTag ChannelID, FInstancedStruct Parameters);
+	void CArbitraryRequest_Implementation(FGameplayTag ChannelID, FInstancedStruct Parameters);
+
+	UFUNCTION(BlueprintAuthorityOnly, BlueprintCallable, Server, Reliable, WithValidation, DisplayName = "Arbitrary Response", Category = "EActorComponent")
+	void SArbitraryResponse(FGameplayTag ChannelID, FInstancedStruct Parameters);
+	void SArbitraryResponse_Implementation(FGameplayTag ChannelID, FInstancedStruct Parameters);
+	bool SArbitraryResponse_Validate(FGameplayTag ChannelID, FInstancedStruct Parameters);
+
+	UFUNCTION(NetMulticast, Reliable, DisplayName = "Enhanced Actor Component|@Client ArbitraryResponse", Category = "EActorComponent")
+	void CArbitraryResponse(FGameplayTag ChannelID, FInstancedStruct Parameters);
+	void CArbitraryResponse_Implementation(FGameplayTag ChannelID, FInstancedStruct Parameters);
+
+
+
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "EActorComponent")
 	void ArbitraryChannel(FGameplayTag ChannelID, FInstancedStruct Parameters, FGameplayTag& Out_ChannelID, FInstancedStruct& Out_Parameters);
 
@@ -59,35 +79,33 @@ public:
 
 #pragma endregion Arbitrary
 
-#pragma region GameplayTags
 
-	UFUNCTION(BlueprintCallable, Category = "EActorComponent|Gameplay Tag")
-	bool AddTag(FGameplayTag Tag);
+	UFUNCTION(BlueprintAuthorityOnly, BlueprintCallable, Server, Reliable, WithValidation, DisplayName = "Add Gameplay Tag", Category = "EActorComponent|Gameplay Tag")
+	void SAddGameplayTag(FGameplayTag Tag);
+	void SAddGameplayTag_Implementation(FGameplayTag Tag);
+	bool SAddGameplayTag_Validate(FGameplayTag Tag);
 
-	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "EActorComponent|Gameplay Tag")
-	void OnTagAdded(FGameplayTag Tag);
-	virtual void OnTagAdded_Implementation(FGameplayTag Tag);
+	UFUNCTION(NetMulticast, Reliable, Category = "EActorComponent|Gameplay Tag")
+	void CAddGameplayTag(FGameplayTag Tag);
+	void CAddGameplayTag_Implementation(FGameplayTag Tag);
 
-	UFUNCTION(BlueprintCallable, Category = "EActorComponent|Gameplay Tag")
-	bool RemoveTag(FGameplayTag Tag);
 
-	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "EActorComponent|Gameplay Tag")
-	void OnTagRemoved(FGameplayTag Tag);
-	virtual void OnTagRemoved_Implementation(FGameplayTag Tag);
+	UFUNCTION(BlueprintAuthorityOnly, BlueprintCallable, Server, Reliable, WithValidation, DisplayName = "Remove Gameplay Tag", Category = "EActorComponent|Gameplay Tag")
+	void SRemoveGameplayTag(FGameplayTag Tag);
+	void SRemoveGameplayTag_Implementation(FGameplayTag Tag);
+	bool SRemoveGameplayTag_Validate(FGameplayTag Tag);
 
-	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "EActorComponent|Gameplay Tag")
-	bool HasAnyTags(FGameplayTagContainer Tag, bool ExactMatch) const;
+	UFUNCTION(NetMulticast, Reliable, Category = "EActorComponent|Gameplay Tag")
+	void CRemoveGameplayTag(FGameplayTag Tag);
+	void CRemoveGameplayTag_Implementation(FGameplayTag Tag);
 
-	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnTagAdd, FGameplayTag, Tag);
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnTagAdded, FGameplayTag, Tag);
 	UPROPERTY(BlueprintAssignable, Category = "EActorComponent|Event Dispatcher")
-	FOnTagAdd OnTagAdd;
+	FOnTagAdded OnTagAdded;
 
-	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnTagRemove, FGameplayTag, Tag);
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnTagRemoved, FGameplayTag, Tag);
 	UPROPERTY(BlueprintAssignable, Category = "EActorComponent|Event Dispatcher")
-	FOnTagRemove OnTagRemove;
-
-#pragma endregion GameplayTags
-
+	FOnTagRemoved OnTagRemoved;
 
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
