@@ -2,7 +2,7 @@
 
 #pragma once
 
-#define EARBITRARY_MACRO(ClassName) \
+#define EARBITRARY_REPLICATION(ClassName) \
 	void ClassName::SArbitraryRequest_Implementation(FGameplayTag ChannelID, FInstancedStruct Parameters) \
 	{ \
 		CArbitraryRequest(ChannelID, Parameters); \
@@ -27,11 +27,12 @@
 	{ \
 		OnArbitraryResponse.Broadcast(ChannelID, Parameters); \
 	} \
+
+#define EARBITRARY_IMPLEMENTATION(ClassName) \
 	void ClassName::OnArbitraryRequested_Implementation(FGameplayTag ChannelID, FInstancedStruct Parameters) {} \
 	void ClassName::OnArbitraryResponded_Implementation(FGameplayTag ChannelID, FInstancedStruct Parameters) {} \
 
-
-#define EGAMEPLAYTAG_MACRO(ClassName) \
+#define EGAMEPLAYTAG_REPLICATION(ClassName) \
 	void ClassName::SAddGameplayTag_Implementation(FGameplayTag Tag) \
 	{ \
 		CAddGameplayTag(Tag); \

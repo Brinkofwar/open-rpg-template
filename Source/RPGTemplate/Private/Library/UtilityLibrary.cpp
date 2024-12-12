@@ -5,8 +5,8 @@
 #include "GameplayEffect.h"
 #include "GameplayEffectExtension.h"
 #include "InputActionValue.h"
-#include "Component/ReplicatedAction.h"
 #include "GameFramework/Character.h"
+#include "GameplayAbilities/Public/AbilitySystemBlueprintLibrary.h"
 
 void UUtilityLibrary::PrintLog(FString Text, ELogType logType, UObject* Object, float Time)
 {
@@ -137,43 +137,146 @@ FVector UUtilityLibrary::GetActionValueVector(const FInputActionValue& ActionVal
 	return ActionValue.Get<FVector>();
 }
 
-bool UUtilityLibrary::HasReplicatedActionComponent(AActor* Actor)
+bool UUtilityLibrary::HasEnhancedAbilitySystemComponent(AActor* Actor)
 {
 	if (!Actor) {
 		return false;
 	}
 
-	UActorComponent* actionComponent = Actor->GetComponentByClass(UReplicatedAction::StaticClass());
+	UAbilitySystemComponent* abilitySystem = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(Actor);
+	if (!abilitySystem) {
+		return false;
+	}
 
-	if (!actionComponent) {
+	UEAbilitySystemComponent* eAbilitySystem = Cast<UEAbilitySystemComponent>(abilitySystem);
+	if (!eAbilitySystem) {
 		return false;
 	}
 
 	return true;
 }
 
-UReplicatedAction* UUtilityLibrary::GetReplicatedActionComponent(AActor* Actor)
+UEAbilitySystemComponent* UUtilityLibrary::GetEnhancedAbilitySystemComponent(AActor* Actor)
 {
 	if (!Actor) {
 		return nullptr;
 	}
 
-	UActorComponent* actionComponent = Actor->GetComponentByClass(UReplicatedAction::StaticClass());
-
-	if (!actionComponent) {
+	UAbilitySystemComponent* abilitySystem = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(Actor);
+	if (!abilitySystem) {
 		return nullptr;
 	}
 
-	UReplicatedAction* replicatedAction = Cast<UReplicatedAction>(actionComponent);
-
-	if (!replicatedAction) {
+	UEAbilitySystemComponent* eAbilitySystem = Cast<UEAbilitySystemComponent>(abilitySystem);
+	if (!eAbilitySystem) {
 		return nullptr;
 	}
 
-	return replicatedAction;
+	return eAbilitySystem;
+}
+
+AController* UUtilityLibrary::GetLocalController(APawn* Pawn, bool& Success)
+{
+	Success = false;
+
+	if (!Pawn) {
+		return nullptr;
+	}
+
+	AController* controller = Pawn->GetController();
+	if (!controller) {
+		return nullptr;
+	}
+
+	if (controller->IsLocalPlayerController()) {
+		Success = true;
+	}
+
+	return controller;
 }
 
 bool UUtilityLibrary::GetActionValueBool(const FInputActionValue& ActionValue)
 {
 	return ActionValue.Get<bool>();
+}
+
+bool UUtilityLibrary::IsThisMyPawnInServerWorld(APawn* Pawn)
+{
+	if (!Pawn) {
+		return false;
+	}
+
+	AController* controller = Pawn->GetController();
+	if (!controller) {
+		return false;
+	}
+
+	return Pawn->HasAuthority() && controller && !controller->IsLocalPlayerController();
+}
+
+bool UUtilityLibrary::IsThisMyPawnInMyWorld(APawn* Pawn)
+{
+	if (!Pawn) {
+		return false;
+	}
+
+	AController* controller = Pawn->GetController();
+	if (!controller) {
+		return false;
+	}
+
+	return !Pawn->HasAuthority() && controller && controller->IsLocalPlayerController();
+}
+
+
+bool UUtilityLibrary::IsThisServerPawnInServerWorld(APawn* Pawn)
+{
+	if (!Pawn) {
+		return false;
+	}
+
+	AController* controller = Pawn->GetController();
+	if (!controller) {
+		return false;
+	}
+
+	return Pawn->HasAuthority() && controller && controller->IsLocalPlayerController();
+}
+
+bool UUtilityLibrary::IsThisServerPawnInMyWorld(APawn* Pawn)
+{
+	if (!Pawn) {
+		return false;
+	}
+
+	return !Pawn->HasAuthority() && !Pawn->GetController();
+}
+
+void UUtilityLibrary::AuthorityVerifyGate(APawn* Pawn, TEnumAsByte<EAuthorityVerify>& AuthorityVerify)
+{
+	if (IsThisMyPawnInServerWorld(Pawn) || IsThisMyPawnInMyWorld(Pawn) || IsThisServerPawnInServerWorld(Pawn) || IsThisServerPawnInMyWorld(Pawn)) {
+		AuthorityVerify = EAuthorityVerify::Valid;
+	}
+	else {
+		AuthorityVerify = EAuthorityVerify::InValid;
+	}
+}
+
+void UUtilityLibrary::AuthorityBranchGate(APawn* Pawn, TEnumAsByte<EAuthorityBranch>& AuthorityBranch)
+{
+	if (IsThisMyPawnInServerWorld(Pawn)) {
+		AuthorityBranch = EAuthorityBranch::MyPawnInServerWorld;
+	}
+	else if (IsThisMyPawnInMyWorld(Pawn)) {
+		AuthorityBranch = EAuthorityBranch::MyPawnInMyWorld;
+	}
+	else if (IsThisServerPawnInServerWorld(Pawn)) {
+		AuthorityBranch = EAuthorityBranch::ServerPawnInServerWorld;
+	}
+	else if (IsThisServerPawnInMyWorld(Pawn)) {
+		AuthorityBranch = EAuthorityBranch::ServerPawnInMyWorld;
+	}
+	else {
+		AuthorityBranch = EAuthorityBranch::Undefined;
+	}
 }

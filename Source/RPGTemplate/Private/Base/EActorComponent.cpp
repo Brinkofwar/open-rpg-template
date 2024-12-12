@@ -7,6 +7,7 @@
 #include "GameplayTagContainer.h"
 #include "InstancedStruct.h"
 #include "Macro/EMacro.h"
+#include "Net/UnrealNetwork.h"
 
 // Sets default values for this component's properties
 UEActorComponent::UEActorComponent()
@@ -38,8 +39,17 @@ void UEActorComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 	// ...
 }
 
-EARBITRARY_MACRO(UEActorComponent)
-EGAMEPLAYTAG_MACRO(UEActorComponent)
+void UEActorComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(UEActorComponent, Arguments);
+	DOREPLIFETIME(UEActorComponent, GameplayTags);
+}
+
+EARBITRARY_REPLICATION(UEActorComponent)
+EARBITRARY_IMPLEMENTATION(UEActorComponent)
+EGAMEPLAYTAG_REPLICATION(UEActorComponent)
 
 //void UEActorComponent::SArbitraryRequest_Implementation(FGameplayTag ChannelID, FInstancedStruct Parameters)
 //{
@@ -67,8 +77,6 @@ EGAMEPLAYTAG_MACRO(UEActorComponent)
 //}
 //void UEActorComponent::OnArbitraryRequested_Implementation(FGameplayTag ChannelID, FInstancedStruct Parameters) {}
 //void UEActorComponent::OnArbitraryResponded_Implementation(FGameplayTag ChannelID, FInstancedStruct Parameters) {}
-
-
 
 //void UEActorComponent::SAddGameplayTag_Implementation(FGameplayTag Tag)
 //{

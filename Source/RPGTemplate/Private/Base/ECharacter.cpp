@@ -2,6 +2,8 @@
 
 
 #include "Base/ECharacter.h"
+#include "Macro/EMacro.h"
+#include "Net/UnrealNetwork.h"
 
 // Sets default values
 AECharacter::AECharacter()
@@ -28,38 +30,19 @@ void AECharacter::Tick(float DeltaTime)
 // Called to bind functionality to input
 void AECharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
+
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
 }
 
-void AECharacter::OnArbitraryRequested_Implementation(FGameplayTag ChannelID, FInstancedStruct Parameters) {}
-void AECharacter::OnArbitraryResponded_Implementation(FGameplayTag ChannelID, FInstancedStruct Parameters) {}
-
-bool AECharacter::AddTag(FGameplayTag Tag)
+void AECharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
-	if (!GameplayTags.HasTag(Tag)) {
-		GameplayTags.AddTag(Tag);
-		OnTagAdded(Tag);
-		OnTagAdd.Broadcast(Tag);
-		return true;
-	}
-	return false;
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(AECharacter, Arguments);
+	DOREPLIFETIME(AECharacter, GameplayTags);
 }
 
-bool AECharacter::RemoveTag(FGameplayTag Tag)
-{
-	if (GameplayTags.RemoveTag(Tag)) {
-		OnTagRemoved(Tag);
-		OnTagRemove.Broadcast(Tag);
-		return true;
-	}
-	return false;
-}
-
-bool AECharacter::HasAnyTags(FGameplayTagContainer Tag, bool ExactMatch) const
-{
-	return (ExactMatch) ? GameplayTags.HasAnyExact(Tag) : GameplayTags.HasAny(Tag);
-}
-
-void AECharacter::OnTagAdded_Implementation(FGameplayTag Tag) {}
-void AECharacter::OnTagRemoved_Implementation(FGameplayTag Tag) {}
+EARBITRARY_REPLICATION(AECharacter)
+EARBITRARY_IMPLEMENTATION(AECharacter)
+EGAMEPLAYTAG_REPLICATION(AECharacter)

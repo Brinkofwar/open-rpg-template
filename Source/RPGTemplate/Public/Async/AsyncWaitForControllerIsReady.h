@@ -6,7 +6,6 @@
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "AsyncWaitForControllerIsReady.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnControllerChanged, AController*, OldController, AController*, NewController);
 
 /**
  * 
@@ -19,6 +18,7 @@ class RPGTEMPLATE_API UAsyncWaitForControllerIsReady : public UBlueprintAsyncAct
 
 public:
 
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnControllerChanged, AController*, OldController, AController*, NewController);
 	UPROPERTY(BlueprintAssignable)
 	FOnControllerChanged OnControllerChanged;
 

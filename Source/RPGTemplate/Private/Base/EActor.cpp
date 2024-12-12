@@ -2,6 +2,8 @@
 
 
 #include "Base/EActor.h"
+#include "Macro/EMacro.h"
+#include "Net/UnrealNetwork.h"
 
 // Sets default values
 AEActor::AEActor()
@@ -29,35 +31,14 @@ void AEActor::Tick(float DeltaTime)
 
 }
 
-void AEActor::OnArbitraryRequested_Implementation(FGameplayTag ChannelID, FInstancedStruct Parameters) {}
-void AEActor::OnArbitraryResponded_Implementation(FGameplayTag ChannelID, FInstancedStruct Parameters) {}
-
-bool AEActor::AddTag(FGameplayTag Tag)
+void AEActor::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
-	if (!GameplayTags.HasTag(Tag)) {
-		GameplayTags.AddTag(Tag);
-		OnTagAdded(Tag);
-		OnTagAdd.Broadcast(Tag);
-		return true;
-	}
-	return false;
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(AEActor, Arguments);
+	DOREPLIFETIME(AEActor, GameplayTags);
 }
 
-bool AEActor::RemoveTag(FGameplayTag Tag)
-{
-	if (GameplayTags.RemoveTag(Tag)) {
-		OnTagRemoved(Tag);
-		OnTagRemove.Broadcast(Tag);
-		return true;
-	}
-	return false;
-}
-
-bool AEActor::HasAnyTags(FGameplayTagContainer Tag, bool ExactMatch)
-{
-	return (ExactMatch) ? GameplayTags.HasAnyExact(Tag) : GameplayTags.HasAny(Tag);
-}
-
-void AEActor::OnTagAdded_Implementation(FGameplayTag Tag) {}
-void AEActor::OnTagRemoved_Implementation(FGameplayTag Tag) {}
-
+EARBITRARY_REPLICATION(AEActor)
+EARBITRARY_IMPLEMENTATION(AEActor)
+EGAMEPLAYTAG_REPLICATION(AEActor)

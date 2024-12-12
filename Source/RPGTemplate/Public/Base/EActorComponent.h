@@ -25,16 +25,12 @@ protected:
 
 public:
 
-
-#pragma region Properties
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "EActorComponent", Meta = (ExposeOnSpawn = true))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Replicated, Category = "EActor", Meta = (ExposeOnSpawn = true))
 	FInstancedStruct Arguments;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "EActorComponent", Meta = (ExposeOnSpawn = true))
-	FGameplayTagContainer GameplayTags;
-
-#pragma endregion Properties
+	// Called every frame
+	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
 #pragma region Arbitrary
 
@@ -77,6 +73,10 @@ public:
 
 #pragma endregion Arbitrary
 
+#pragma region GameplayTag
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Replicated, Category = "EActorComponent", Meta = (ExposeOnSpawn = true))
+	FGameplayTagContainer GameplayTags;
 
 	UFUNCTION(BlueprintAuthorityOnly, BlueprintCallable, Server, Reliable, WithValidation, DisplayName = "Add Gameplay Tag", Category = "EActorComponent|Gameplay Tag")
 	void SAddGameplayTag(FGameplayTag Tag);
@@ -105,8 +105,6 @@ public:
 	UPROPERTY(BlueprintAssignable, Category = "EActorComponent|Event Dispatcher")
 	FOnTagRemoved OnTagRemoved;
 
-	// Called every frame
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-
+#pragma endregion GameplayTag
 		
 };

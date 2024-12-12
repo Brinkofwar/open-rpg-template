@@ -29,17 +29,6 @@ protected:
 
 public:
 
-
-#pragma region Properties
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enhanced Game Instance", Meta = (ExposeOnSpawn = true))
-	FInstancedStruct Arguments;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enhanced Game Instance", Meta = (ExposeOnSpawn = true))
-	FGameplayTagContainer GameplayTags;
-
-#pragma endregion Properties
-
 #pragma region Arbitrary
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Enhanced Game Instance")
@@ -62,35 +51,5 @@ public:
 	FOnArbitraryResponse OnArbitraryResponse;
 
 #pragma endregion Arbitrary
-
-#pragma region GameplayTags
-
-	UFUNCTION(BlueprintCallable, Category = "Enhanced Game Instance|Gameplay Tag")
-	bool AddTag(FGameplayTag Tag);
-
-	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Enhanced Game Instance|Gameplay Tag")
-	void OnTagAdded(FGameplayTag Tag);
-	virtual void OnTagAdded_Implementation(FGameplayTag Tag);
-
-	UFUNCTION(BlueprintCallable, Category = "Enhanced Game Instance|Gameplay Tag")
-	bool RemoveTag(FGameplayTag Tag);
-
-	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Enhanced Game Instance|Gameplay Tag")
-	void OnTagRemoved(FGameplayTag Tag);
-	virtual void OnTagRemoved_Implementation(FGameplayTag Tag);
-
-	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Enhanced Game Instance|Gameplay Tag")
-	bool HasAnyTags(FGameplayTagContainer Tag, bool ExactMatch) const;
-
-	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnTagAdd, FGameplayTag, Tag);
-	UPROPERTY(BlueprintAssignable, Category = "Enhanced Game Instance|Event Dispatcher")
-	FOnTagAdd OnTagAdd;
-
-	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnTagRemove, FGameplayTag, Tag);
-	UPROPERTY(BlueprintAssignable, Category = "Enhanced Game Instance|Event Dispatcher")
-	FOnTagRemove OnTagRemove;
-
-#pragma endregion GameplayTags
-
 
 };

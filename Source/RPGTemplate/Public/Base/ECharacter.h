@@ -24,74 +24,90 @@ protected:
 
 public:
 
-
-#pragma region Properties
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "ECharacter", Meta = (ExposeOnSpawn = true))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Replicated, Category = "ECharacter", Meta = (ExposeOnSpawn = true))
 	FInstancedStruct Arguments;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ECharacter", Meta = (ExposeOnSpawn = true))
-	FGameplayTagContainer GameplayTags;
-
-#pragma endregion Properties
-
-#pragma region Arbitrary
-
-	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "ECharacter")
-	void ArbitraryChannel(FGameplayTag ChannelID, FInstancedStruct Parameters, FGameplayTag& Out_ChannelID, FInstancedStruct& Out_Parameters);
-
-	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "ECharacter")
-	void OnArbitraryRequested(FGameplayTag ChannelID, FInstancedStruct Parameters);
-	virtual void OnArbitraryRequested_Implementation(FGameplayTag ChannelID, FInstancedStruct Parameters);
-
-	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "ECharacter")
-	void OnArbitraryResponded(FGameplayTag ChannelID, FInstancedStruct Parameters);
-	virtual void OnArbitraryResponded_Implementation(FGameplayTag ChannelID, FInstancedStruct Parameters);
-
-	DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnArbitraryRequest, FGameplayTag, ChannelID, FInstancedStruct, Parameters);
-	UPROPERTY(BlueprintAssignable, BlueprintCallable, Category = "ECharacter|Event Dispatcher")
-	FOnArbitraryRequest OnArbitraryRequest;
-
-	DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnArbitraryResponse, FGameplayTag, ChannelID, FInstancedStruct, Parameters);
-	UPROPERTY(BlueprintAssignable, BlueprintCallable, Category = "ECharacter|Event Dispatcher")
-	FOnArbitraryResponse OnArbitraryResponse;
-
-#pragma endregion Arbitrary
-
-#pragma region GameplayTags
-
-	UFUNCTION(BlueprintCallable, Category = "ECharacter|Gameplay Tag")
-	bool AddTag(FGameplayTag Tag);
-
-	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "ECharacter|Gameplay Tag")
-	void OnTagAdded(FGameplayTag Tag);
-	virtual void OnTagAdded_Implementation(FGameplayTag Tag);
-
-	UFUNCTION(BlueprintCallable, Category = "ECharacter|Gameplay Tag")
-	bool RemoveTag(FGameplayTag Tag);
-
-	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "ECharacter|Gameplay Tag")
-	void OnTagRemoved(FGameplayTag Tag);
-	virtual void OnTagRemoved_Implementation(FGameplayTag Tag);
-
-	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "ECharacter|Gameplay Tag")
-	bool HasAnyTags(FGameplayTagContainer Tag, bool ExactMatch) const;
-
-	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnTagAdd, FGameplayTag, Tag);
-	UPROPERTY(BlueprintAssignable, Category = "ECharacter|Event Dispatcher")
-	FOnTagAdd OnTagAdd;
-
-	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnTagRemove, FGameplayTag, Tag);
-	UPROPERTY(BlueprintAssignable, Category = "ECharacter|Event Dispatcher")
-	FOnTagRemove OnTagRemove;
-
-#pragma endregion GameplayTags
-
 
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+
+#pragma region Arbitrary
+
+	UFUNCTION(BlueprintAuthorityOnly, BlueprintCallable, Server, Reliable, WithValidation, DisplayName = "Arbitrary Request", Category = "EActorComponent")
+	void SArbitraryRequest(FGameplayTag ChannelID, FInstancedStruct Parameters);
+	void SArbitraryRequest_Implementation(FGameplayTag ChannelID, FInstancedStruct Parameters);
+	bool SArbitraryRequest_Validate(FGameplayTag ChannelID, FInstancedStruct Parameters);
+
+	UFUNCTION(NetMulticast, Reliable, Category = "EActorComponent")
+	void CArbitraryRequest(FGameplayTag ChannelID, FInstancedStruct Parameters);
+	void CArbitraryRequest_Implementation(FGameplayTag ChannelID, FInstancedStruct Parameters);
+
+	UFUNCTION(BlueprintAuthorityOnly, BlueprintCallable, Server, Reliable, WithValidation, DisplayName = "Arbitrary Response", Category = "EActorComponent")
+	void SArbitraryResponse(FGameplayTag ChannelID, FInstancedStruct Parameters);
+	void SArbitraryResponse_Implementation(FGameplayTag ChannelID, FInstancedStruct Parameters);
+	bool SArbitraryResponse_Validate(FGameplayTag ChannelID, FInstancedStruct Parameters);
+
+	UFUNCTION(NetMulticast, Reliable, Category = "EActorComponent")
+	void CArbitraryResponse(FGameplayTag ChannelID, FInstancedStruct Parameters);
+	void CArbitraryResponse_Implementation(FGameplayTag ChannelID, FInstancedStruct Parameters);
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCosmetic, BlueprintCallable, Category = "EActorComponent")
+	void ArbitraryChannel(FGameplayTag ChannelID, FInstancedStruct Parameters, FGameplayTag& Out_ChannelID, FInstancedStruct& Out_Parameters);
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCosmetic, BlueprintCallable, Category = "EActorComponent")
+	void OnArbitraryRequested(FGameplayTag ChannelID, FInstancedStruct Parameters);
+	virtual void OnArbitraryRequested_Implementation(FGameplayTag ChannelID, FInstancedStruct Parameters);
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCosmetic, BlueprintCallable, Category = "EActorComponent")
+	void OnArbitraryResponded(FGameplayTag ChannelID, FInstancedStruct Parameters);
+	virtual void OnArbitraryResponded_Implementation(FGameplayTag ChannelID, FInstancedStruct Parameters);
+
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnArbitraryRequest, FGameplayTag, ChannelID, FInstancedStruct, Parameters);
+	UPROPERTY(BlueprintAssignable, BlueprintCallable, Category = "EActorComponent|Event Dispatcher")
+	FOnArbitraryRequest OnArbitraryRequest;
+
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnArbitraryResponse, FGameplayTag, ChannelID, FInstancedStruct, Parameters);
+	UPROPERTY(BlueprintAssignable, BlueprintCallable, Category = "EActorComponent|Event Dispatcher")
+	FOnArbitraryResponse OnArbitraryResponse;
+
+#pragma endregion Arbitrary
+
+#pragma region GameplayTag
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Replicated, Category = "EActorComponent", Meta = (ExposeOnSpawn = true))
+	FGameplayTagContainer GameplayTags;
+
+	UFUNCTION(BlueprintAuthorityOnly, BlueprintCallable, Server, Reliable, WithValidation, DisplayName = "Add Gameplay Tag", Category = "EActorComponent|Gameplay Tag")
+	void SAddGameplayTag(FGameplayTag Tag);
+	void SAddGameplayTag_Implementation(FGameplayTag Tag);
+	bool SAddGameplayTag_Validate(FGameplayTag Tag);
+
+	UFUNCTION(NetMulticast, Reliable)
+	void CAddGameplayTag(FGameplayTag Tag);
+	void CAddGameplayTag_Implementation(FGameplayTag Tag);
+
+
+	UFUNCTION(BlueprintAuthorityOnly, BlueprintCallable, Server, Reliable, WithValidation, DisplayName = "Remove Gameplay Tag", Category = "EActorComponent|Gameplay Tag")
+	void SRemoveGameplayTag(FGameplayTag Tag);
+	void SRemoveGameplayTag_Implementation(FGameplayTag Tag);
+	bool SRemoveGameplayTag_Validate(FGameplayTag Tag);
+
+	UFUNCTION(NetMulticast, Reliable)
+	void CRemoveGameplayTag(FGameplayTag Tag);
+	void CRemoveGameplayTag_Implementation(FGameplayTag Tag);
+
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnTagAdded, FGameplayTag, Tag);
+	UPROPERTY(BlueprintAssignable, Category = "EActorComponent|Event Dispatcher")
+	FOnTagAdded OnTagAdded;
+
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnTagRemoved, FGameplayTag, Tag);
+	UPROPERTY(BlueprintAssignable, Category = "EActorComponent|Event Dispatcher")
+	FOnTagRemoved OnTagRemoved;
+
+#pragma endregion GameplayTag
 
 };
