@@ -18,25 +18,26 @@ class RPGTEMPLATE_API UAsyncLoadAssets : public UBlueprintAsyncActionBase
 public:
 
 	UFUNCTION(BlueprintCallable, DisplayName = "Async Load Assets", meta = (BlueprintInternalUseOnly = "true"))
-	static UAsyncLoadAssets* LoadAssets(const TArray<TSoftObjectPtr<UObject>>& Assets);
+	static UAsyncLoadAssets* Start(const TArray<TSoftObjectPtr<UObject>>& Assets);
 
 	virtual void Activate() override;
 
-	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAnyAssetLoaded, UObject*, Asset);
-	UPROPERTY(BlueprintAssignable)
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnAnyAssetLoaded, UObject*, Asset, int32, Index);
+	UPROPERTY(BlueprintAssignable, DisplayName = "Loaded")
 	FOnAnyAssetLoaded OnAnyAssetLoaded;
 
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnAllAssetsLoaded);
-	UPROPERTY(BlueprintAssignable)
+	UPROPERTY(BlueprintAssignable, DisplayName = "Completed")
 	FOnAllAssetsLoaded OnAllAssetsLoaded;
 
 private:
 
 	void EndTask();
 
-    void LoadAsset(const TSoftObjectPtr<UObject>& SoftObject);
+    void LoadAsset(const TArray<TSoftObjectPtr<UObject>>& SoftObjects);
 
 	TArray<TSoftObjectPtr<UObject>> AssetsToLoad;
+	TMap<TSoftObjectPtr<UObject>, int32> AssetIndexMap;
 
     int32 PendingAssets = 0;
 

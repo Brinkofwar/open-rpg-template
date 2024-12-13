@@ -1,14 +1,14 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Library/AsyncAssetLoader.h"
+#include "Async/AsyncLoadAsset.h"
 #include "Engine/StreamableManager.h"
 #include "Engine/AssetManager.h"
 
-UAsyncAssetLoader* UAsyncAssetLoader::AsyncLoadAsset(TSoftObjectPtr<UObject> Asset)
+UAsyncLoadAsset* UAsyncLoadAsset::Start(TSoftObjectPtr<UObject> Asset)
 {
 
-	UAsyncAssetLoader* task = NewObject<UAsyncAssetLoader>();
+	UAsyncLoadAsset* task = NewObject<UAsyncLoadAsset>();
 	task->AssetToLoad = Asset;
 
 	if (Asset.IsNull())
@@ -22,7 +22,7 @@ UAsyncAssetLoader* UAsyncAssetLoader::AsyncLoadAsset(TSoftObjectPtr<UObject> Ass
 	UAssetManager& assetManager = UAssetManager::Get();
 	task->AssetHandle = assetManager.GetStreamableManager().RequestAsyncLoad(
 		Asset.ToSoftObjectPath(),
-		FStreamableDelegate::CreateUObject(task, &UAsyncAssetLoader::OnAssetLoadedInternally),
+		FStreamableDelegate::CreateUObject(task, &UAsyncLoadAsset::OnAssetLoadedInternally),
 		FStreamableManager::AsyncLoadHighPriority
 	);
 
@@ -30,9 +30,9 @@ UAsyncAssetLoader* UAsyncAssetLoader::AsyncLoadAsset(TSoftObjectPtr<UObject> Ass
 
 }
 
-
-void UAsyncAssetLoader::OnAssetLoadedInternally()
+void UAsyncLoadAsset::OnAssetLoadedInternally()
 {
+
 	UObject* loadedAsset = AssetToLoad.Get();
 
 	OnAssetLoaded.Broadcast(loadedAsset);

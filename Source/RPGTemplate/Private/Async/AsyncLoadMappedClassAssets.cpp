@@ -5,7 +5,7 @@
 #include "Engine/StreamableManager.h"
 #include "Engine/AssetManager.h"
 
-UAsyncLoadMappedClassAssets* UAsyncLoadMappedClassAssets::LoadAssets(const TMap<FName, TSoftClassPtr<UObject>>& Assets)
+UAsyncLoadMappedClassAssets* UAsyncLoadMappedClassAssets::Start(const TMap<FName, TSoftClassPtr<UObject>>& Assets)
 {
     UAsyncLoadMappedClassAssets* task = NewObject<UAsyncLoadMappedClassAssets>();
     task->AssetsToLoad = Assets;
@@ -68,5 +68,6 @@ void UAsyncLoadMappedClassAssets::EndTask()
     if (IsValid(this))
     {
         SetReadyToDestroy();
+        MarkAsGarbage();
     }
 }

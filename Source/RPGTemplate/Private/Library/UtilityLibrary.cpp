@@ -7,6 +7,7 @@
 #include "InputActionValue.h"
 #include "GameFramework/Character.h"
 #include "GameplayAbilities/Public/AbilitySystemBlueprintLibrary.h"
+#include "Async/AsyncCustomTask.h"
 
 void UUtilityLibrary::PrintLog(FString Text, ELogType logType, UObject* Object, float Time)
 {
@@ -279,4 +280,25 @@ void UUtilityLibrary::AuthorityBranchGate(APawn* Pawn, TEnumAsByte<EAuthorityBra
 	else {
 		AuthorityBranch = EAuthorityBranch::Undefined;
 	}
+}
+
+UAsyncTaskObject* UUtilityLibrary::CreateAsyncTask(TSubclassOf<UAsyncTaskObject> AsyncTask, UObject* Outer, FInstancedStruct Arguments, bool& Success)
+{
+
+	if (!IsValid(Outer) && !IsValid(Outer->GetWorld()))
+	{
+		return nullptr;
+	}
+
+	UAsyncTaskObject* task = NewObject<UAsyncTaskObject>(Outer, AsyncTask);
+	if (!IsValid(task)) {
+		return nullptr;
+	}
+
+	task->Arguments = Arguments;
+
+	Success = true;
+
+	return task;
+
 }

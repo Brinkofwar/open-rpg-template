@@ -18,16 +18,16 @@ class RPGTEMPLATE_API UAsyncLoadMappedAssets : public UBlueprintAsyncActionBase
 public:
 
 	UFUNCTION(BlueprintCallable, DisplayName = "Async Load Mapped Assets", meta = (BlueprintInternalUseOnly = "true"))
-	static UAsyncLoadMappedAssets* LoadAssets(const TMap<FName, TSoftObjectPtr<UObject>>& Assets);
+	static UAsyncLoadMappedAssets* Start(const TMap<FName, TSoftObjectPtr<UObject>>& Assets);
 
 	virtual void Activate() override;
 
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnAnyAssetLoaded, FName, AssetName, UObject*, Asset);
-	UPROPERTY(BlueprintAssignable)
+	UPROPERTY(BlueprintAssignable, DisplayName = "Loaded")
 	FOnAnyAssetLoaded OnAnyAssetLoaded;
 
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnAllAssetsLoaded);
-	UPROPERTY(BlueprintAssignable)
+	UPROPERTY(BlueprintAssignable, DisplayName = "Completed")
 	FOnAllAssetsLoaded OnAllAssetsLoaded;
 
 private:

@@ -6,10 +6,16 @@
 #include "Engine/AssetManager.h"
 #include "Library/UtilityLibrary.h"
 
-UAsyncLoadClassAssets* UAsyncLoadClassAssets::LoadAssets(const TArray<TSoftClassPtr<UObject>>& Assets)
+UAsyncLoadClassAssets* UAsyncLoadClassAssets::Start(const TArray<TSoftClassPtr<UObject>>& Assets)
 {
     UAsyncLoadClassAssets* task = NewObject<UAsyncLoadClassAssets>();
     task->AssetsToLoad = Assets;
+
+    for (int32 i = 0, len = Assets.Num(); i < len; ++i)
+    {
+        task->AssetIndexMap.Add(Assets[i], i);
+    }
+
     return task;
 }
 
@@ -22,47 +28,54 @@ void UAsyncLoadClassAssets::Activate()
         return;
     }
 
-    PendingAssets = AssetsToLoad.Num();
-
-    for (auto& asset : AssetsToLoad)
-    {
-        LoadAsset(asset);
-    }
+    LoadAsset(AssetsToLoad);
 }
 
-void UAsyncLoadClassAssets::LoadAsset(const TSoftClassPtr<UObject>& SoftClass)
+void UAsyncLoadClassAssets::LoadAsset(const TArray<TSoftClassPtr<UObject>>& SoftClasses)
 {
 
-    if (SoftClass.IsNull())
+    if (UAssetManager* assetManager = UAssetManager::GetIfInitialized())
     {
-        if (--PendingAssets <= 0)
+
+        TArray<FSoftObjectPath> assetPaths;
+        for (const auto& Asset : SoftClasses)
         {
-            OnAllAssetsLoaded.Broadcast();
-            EndTask();
+            if (!Asset.IsNull())
+            {
+                assetPaths.Add(Asset.ToSoftObjectPath());
+            }
         }
-        return;
-    }
-    
-    if (UAssetManager* AssetManager = UAssetManager::GetIfValid())
-    {
-        AssetManager->GetStreamableManager().RequestAsyncLoad(
-            SoftClass.ToSoftObjectPath(),
-            FStreamableDelegate::CreateWeakLambda(this, [this, SoftClass]()
-                {
 
-                    UClass* loadedAsset = SoftClass.Get();
+        if (assetPaths.Num() > 0)
+        {
 
-                    OnAnyAssetLoaded.Broadcast(loadedAsset);
-
-                    if (--PendingAssets <= 0)
+            assetManager->GetStreamableManager().RequestAsyncLoad(
+                assetPaths,
+                FStreamableDelegate::CreateWeakLambda(this, [this, SoftClasses]()
                     {
-                        OnAllAssetsLoaded.Broadcast();
-                    }
 
-                }
-            )
-        );
+                        for (int32 i = 0; i < SoftClasses.Num(); ++i)
+                        {
+                            UClass* loadedAsset = SoftClasses[i].Get();
+                            int32 assetIndex = AssetIndexMap.FindChecked(SoftClasses[i]);
+
+                            OnAnyAssetLoaded.Broadcast(loadedAsset, assetIndex);
+                        }
+
+                        if (--PendingAssets <= 0)
+                        {
+                            OnAllAssetsLoaded.Broadcast();
+                            EndTask();
+                        }
+
+                    }
+                )
+            );
+
+        }
+
     }
+
 }
 
 void UAsyncLoadClassAssets::EndTask()
@@ -70,5 +83,6 @@ void UAsyncLoadClassAssets::EndTask()
     if (IsValid(this))
     {
         SetReadyToDestroy();
+        MarkAsGarbage();
     }
 }

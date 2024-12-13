@@ -6,7 +6,7 @@
 #include "Engine/AssetManager.h"
 
 
-UAsyncLoadMappedAssets* UAsyncLoadMappedAssets::LoadAssets(const TMap<FName, TSoftObjectPtr<UObject>>& Assets)
+UAsyncLoadMappedAssets* UAsyncLoadMappedAssets::Start(const TMap<FName, TSoftObjectPtr<UObject>>& Assets)
 {
     UAsyncLoadMappedAssets* task = NewObject<UAsyncLoadMappedAssets>();
     task->AssetsToLoad = Assets;
@@ -70,5 +70,6 @@ void UAsyncLoadMappedAssets::EndTask()
     if (IsValid(this))
     {
         SetReadyToDestroy();
+        MarkAsGarbage();
     }
 }

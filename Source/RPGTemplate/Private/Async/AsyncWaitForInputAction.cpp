@@ -1,33 +1,33 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Async/WaitForInputAction.h"
+#include "Async/AsyncWaitForInputAction.h"
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
 #include "Engine/LocalPlayer.h"
 #include "Library/UtilityLibrary.h"
 #include "EnhancedInputComponent.h"
 
-UWaitForInputAction* UWaitForInputAction::ListenForInputAction(UEnhancedInputComponent* InputComponent, UInputAction* Action)
+UAsyncWaitForInputAction* UAsyncWaitForInputAction::Start(UEnhancedInputComponent* InputComponent, UInputAction* Action)
 {
-    UWaitForInputAction* task = NewObject<UWaitForInputAction>();
+    UAsyncWaitForInputAction* task = NewObject<UAsyncWaitForInputAction>();
     task->EnhancedInputComponent = InputComponent;
     task->InputAction = Action;
     return task;
 }
 
-void UWaitForInputAction::Activate()
+void UAsyncWaitForInputAction::Activate()
 {
     if (!EnhancedInputComponent || !InputAction)
     {
         return;
     }
 
-    InputHandleCancel = &EnhancedInputComponent->BindAction(InputAction, ETriggerEvent::Canceled, this, &UWaitForInputAction::HandleInputActionCancel);
-    InputHandleComplete = &EnhancedInputComponent->BindAction(InputAction, ETriggerEvent::Completed, this, &UWaitForInputAction::HandleInputActionComplete);
-    InputHandleOngoing = &EnhancedInputComponent->BindAction(InputAction, ETriggerEvent::Ongoing, this, &UWaitForInputAction::HandleInputActionOngoing);
-    InputHandleStart = &EnhancedInputComponent->BindAction(InputAction, ETriggerEvent::Started, this, &UWaitForInputAction::HandleInputActionStart);
-    InputHandleTrigger = &EnhancedInputComponent->BindAction(InputAction, ETriggerEvent::Triggered, this, &UWaitForInputAction::HandleInputActionTrigger);
+    InputHandleCancel = &EnhancedInputComponent->BindAction(InputAction, ETriggerEvent::Canceled, this, &UAsyncWaitForInputAction::HandleInputActionCancel);
+    InputHandleComplete = &EnhancedInputComponent->BindAction(InputAction, ETriggerEvent::Completed, this, &UAsyncWaitForInputAction::HandleInputActionComplete);
+    InputHandleOngoing = &EnhancedInputComponent->BindAction(InputAction, ETriggerEvent::Ongoing, this, &UAsyncWaitForInputAction::HandleInputActionOngoing);
+    InputHandleStart = &EnhancedInputComponent->BindAction(InputAction, ETriggerEvent::Started, this, &UAsyncWaitForInputAction::HandleInputActionStart);
+    InputHandleTrigger = &EnhancedInputComponent->BindAction(InputAction, ETriggerEvent::Triggered, this, &UAsyncWaitForInputAction::HandleInputActionTrigger);
 
     //EnhancedInputComponent->RemoveBinding(*Actions);
 
@@ -59,35 +59,35 @@ void UWaitForInputAction::Activate()
 
 }
 
-void UWaitForInputAction::HandleInputActionCancel(const FInputActionInstance& ActionInstance)
+void UAsyncWaitForInputAction::HandleInputActionCancel(const FInputActionInstance& ActionInstance)
 {
     if (OnCanceled.IsBound())
     {
         OnCanceled.Broadcast(ActionInstance.GetValue(), ActionInstance.GetElapsedTime(), ActionInstance.GetTriggeredTime());
     }
 }
-void UWaitForInputAction::HandleInputActionComplete(const FInputActionInstance& ActionInstance)
+void UAsyncWaitForInputAction::HandleInputActionComplete(const FInputActionInstance& ActionInstance)
 {
     if (OnCompleted.IsBound())
     {
         OnCompleted.Broadcast(ActionInstance.GetValue(), ActionInstance.GetElapsedTime(), ActionInstance.GetTriggeredTime());
     }
 }
-void UWaitForInputAction::HandleInputActionOngoing(const FInputActionInstance& ActionInstance)
+void UAsyncWaitForInputAction::HandleInputActionOngoing(const FInputActionInstance& ActionInstance)
 {
     if (OnGoing.IsBound())
     {
         OnGoing.Broadcast(ActionInstance.GetValue(), ActionInstance.GetElapsedTime(), ActionInstance.GetTriggeredTime());
     }
 }
-void UWaitForInputAction::HandleInputActionStart(const FInputActionInstance& ActionInstance)
+void UAsyncWaitForInputAction::HandleInputActionStart(const FInputActionInstance& ActionInstance)
 {
     if (OnStarted.IsBound())
     {
         OnStarted.Broadcast(ActionInstance.GetValue(), ActionInstance.GetElapsedTime(), ActionInstance.GetTriggeredTime());
     }
 }
-void UWaitForInputAction::HandleInputActionTrigger(const FInputActionInstance& ActionInstance)
+void UAsyncWaitForInputAction::HandleInputActionTrigger(const FInputActionInstance& ActionInstance)
 {
     if (OnTriggered.IsBound())
     {
@@ -95,7 +95,7 @@ void UWaitForInputAction::HandleInputActionTrigger(const FInputActionInstance& A
     }
 }
 
-void UWaitForInputAction::EndTask()
+void UAsyncWaitForInputAction::EndTask()
 {
     if (EnhancedInputComponent && InputAction)
     {
@@ -113,5 +113,9 @@ void UWaitForInputAction::EndTask()
         InputHandleStart = nullptr;
         InputHandleTrigger = nullptr;
     }
-    SetReadyToDestroy();
+    if (IsValid(this))
+    {
+        SetReadyToDestroy();
+        MarkAsGarbage();
+    }
 }

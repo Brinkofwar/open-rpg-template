@@ -11,6 +11,7 @@
 #include "GameplayEffectExtension.h"
 #include "InputActionValue.h"
 #include "Base/EAbilitySystemComponent.h"
+#include "Async/AsyncCustomTask.h"
 #include "UtilityLibrary.generated.h"
 
 /**
@@ -85,5 +86,10 @@ class RPGTEMPLATE_API UUtilityLibrary : public UBlueprintFunctionLibrary
 
 	UFUNCTION(BlueprintCallable, Category = "EUtility|Replication", Meta = (ExpandEnumAsExecs = "AuthorityBranch"))
 	static void AuthorityBranchGate(APawn* Pawn, TEnumAsByte<EAuthorityBranch>& AuthorityBranch);
+
+
+
+	UFUNCTION(BlueprintCallable, meta = (DefaultToSelf = "Outer", AdvancedDisplay = "Outer, Arguments"))
+	static UAsyncTaskObject* CreateAsyncTask(TSubclassOf<UAsyncTaskObject> AsyncTask, UObject* Outer, FInstancedStruct Arguments, bool& Success);
 
 };

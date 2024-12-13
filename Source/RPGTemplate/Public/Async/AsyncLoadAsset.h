@@ -5,27 +5,27 @@
 #include "CoreMinimal.h"
 #include "Kismet/BlueprintAsyncActionBase.h"
 #include "Engine/StreamableManager.h"
-#include "AsyncAssetLoader.generated.h"
+#include "AsyncLoadAsset.generated.h"
 
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAssetLoaded, UObject*, LoadedAsset);
 
 /**
  * 
  */
 UCLASS()
-class RPGTEMPLATE_API UAsyncAssetLoader : public UBlueprintAsyncActionBase
+class RPGTEMPLATE_API UAsyncLoadAsset : public UBlueprintAsyncActionBase
 {
 
 	GENERATED_BODY()
 
 public:
 
-	UFUNCTION(BlueprintCallable, Category = "Asset Loading", meta = (BlueprintInternalUseOnly = "true"))
-	static UAsyncAssetLoader* AsyncLoadAsset(TSoftObjectPtr<UObject> Asset);
+	UFUNCTION(BlueprintCallable, DisplayName = "Async Load Asset", meta = (BlueprintInternalUseOnly = "true"))
+	static UAsyncLoadAsset* Start(TSoftObjectPtr<UObject> Asset);
 
 
-	UPROPERTY(BlueprintAssignable)
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAssetLoaded, UObject*, Asset);
+	UPROPERTY(BlueprintAssignable, DisplayName = "Loaded")
 	FOnAssetLoaded OnAssetLoaded;
 
 protected:

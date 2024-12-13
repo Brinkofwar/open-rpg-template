@@ -4,14 +4,14 @@
 
 #include "CoreMinimal.h"
 #include "Kismet/BlueprintAsyncActionBase.h"
-#include "AsyncWaitForControllerIsReady.generated.h"
+#include "AsyncWaitForControllerChanged.generated.h"
 
 
 /**
  * 
  */
 UCLASS(BlueprintType, meta = (ExposedAsyncProxy = AsyncTask))
-class RPGTEMPLATE_API UAsyncWaitForControllerIsReady : public UBlueprintAsyncActionBase
+class RPGTEMPLATE_API UAsyncWaitForControllerChanged : public UBlueprintAsyncActionBase
 {
 
 	GENERATED_BODY()
@@ -19,11 +19,11 @@ class RPGTEMPLATE_API UAsyncWaitForControllerIsReady : public UBlueprintAsyncAct
 public:
 
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnControllerChanged, AController*, OldController, AController*, NewController);
-	UPROPERTY(BlueprintAssignable)
+	UPROPERTY(BlueprintAssignable, DisplayName="Changed")
 	FOnControllerChanged OnControllerChanged;
 
-	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true"))
-	static UAsyncWaitForControllerIsReady* WaitForControllerIsReady(APawn* TargetPawn);
+	UFUNCTION(BlueprintCallable, DisplayName = "Async Wait For Controller Changed", meta = (BlueprintInternalUseOnly = "true"))
+	static UAsyncWaitForControllerChanged* Start(APawn* TargetPawn);
 
 	virtual void Activate() override;
 

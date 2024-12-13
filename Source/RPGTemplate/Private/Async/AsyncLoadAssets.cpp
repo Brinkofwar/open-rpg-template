@@ -6,10 +6,16 @@
 #include "Engine/AssetManager.h"
 
 
-UAsyncLoadAssets* UAsyncLoadAssets::LoadAssets(const TArray<TSoftObjectPtr<UObject>>& Assets)
+UAsyncLoadAssets* UAsyncLoadAssets::Start(const TArray<TSoftObjectPtr<UObject>>& Assets)
 {
     UAsyncLoadAssets* task = NewObject<UAsyncLoadAssets>();
     task->AssetsToLoad = Assets;
+
+    for (int32 i = 0, len = Assets.Num(); i < len; ++i)
+    {
+        task->AssetIndexMap.Add(Assets[i], i);
+    }
+
     return task;
 }
 
@@ -22,47 +28,54 @@ void UAsyncLoadAssets::Activate()
         return;
     }
 
-    PendingAssets = AssetsToLoad.Num();
-
-    for (const auto& asset : AssetsToLoad)
-    {
-        LoadAsset(asset);
-    }
+    LoadAsset(AssetsToLoad);
 }
 
-void UAsyncLoadAssets::LoadAsset(const TSoftObjectPtr<UObject>& SoftObject)
+void UAsyncLoadAssets::LoadAsset(const TArray<TSoftObjectPtr<UObject>>& SoftObjects)
 {
-    if (SoftObject.IsNull())
+
+    if (UAssetManager* assetManager = UAssetManager::GetIfInitialized())
     {
-        if (--PendingAssets <= 0)
+
+        TArray<FSoftObjectPath> assetPaths;
+        for (const auto& Asset : SoftObjects)
         {
-            OnAllAssetsLoaded.Broadcast();
-            EndTask();
+            if (!Asset.IsNull())
+            {
+                assetPaths.Add(Asset.ToSoftObjectPath());
+            }
         }
-        return;
-    }
 
-    if (UAssetManager* AssetManager = UAssetManager::GetIfInitialized())
-    {
-        AssetManager->GetStreamableManager().RequestAsyncLoad(
-            SoftObject.ToSoftObjectPath(),
-            FStreamableDelegate::CreateWeakLambda(this, [this, SoftObject]()
-                {
+        if (assetPaths.Num() > 0)
+        {
 
-                    UObject* loadedAsset = SoftObject.Get();
-
-                    OnAnyAssetLoaded.Broadcast(loadedAsset);
-
-                    if (--PendingAssets <= 0)
+            assetManager->GetStreamableManager().RequestAsyncLoad(
+                assetPaths,
+                FStreamableDelegate::CreateWeakLambda(this, [this, SoftObjects]()
                     {
-                        OnAllAssetsLoaded.Broadcast();
-                        EndTask();
-                    }
 
-                }
-            )
-        );
+                        for (int32 i = 0; i < SoftObjects.Num(); ++i)
+                        {
+                            UObject* loadedAsset = SoftObjects[i].Get();
+                            int32 assetIndex = AssetIndexMap.FindChecked(SoftObjects[i]);
+
+                            OnAnyAssetLoaded.Broadcast(loadedAsset, assetIndex);
+                        }
+                        
+                        if (--PendingAssets <= 0)
+                        {
+                            OnAllAssetsLoaded.Broadcast();
+                            EndTask();
+                        }
+
+                    }
+                )
+            );
+
+        }
+    
     }
+
 }
 
 void UAsyncLoadAssets::EndTask()
@@ -70,5 +83,6 @@ void UAsyncLoadAssets::EndTask()
     if (IsValid(this))
     {
         SetReadyToDestroy();
+        MarkAsGarbage();
     }
 }
