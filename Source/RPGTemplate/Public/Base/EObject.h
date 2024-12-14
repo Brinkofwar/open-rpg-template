@@ -20,6 +20,8 @@ class RPGTEMPLATE_API UEObject : public UObject
 
 public:
 
+	virtual void BeginDestroy() override;
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enhanced Object", Meta = (ExposeOnSpawn = true))
 	FInstancedStruct Arguments;
 

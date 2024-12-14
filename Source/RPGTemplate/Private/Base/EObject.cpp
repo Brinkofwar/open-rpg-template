@@ -4,4 +4,11 @@
 #include "Base/EObject.h"
 #include "Macro/EMacro.h"
 
+
+void UEObject::BeginDestroy()
+{
+	UE_LOG(LogTemp, Warning, TEXT("UObject %s is being destroyed"), *GetName());
+	Super::BeginDestroy();
+}
+
 EARBITRARY_IMPLEMENTATION(UEObject)
