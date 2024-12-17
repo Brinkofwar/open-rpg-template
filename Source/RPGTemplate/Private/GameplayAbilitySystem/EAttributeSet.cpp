@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Base/EAttributeSet.h"
+#include "GameplayAbilitySystem/EAttributeSet.h"
 #include "GameplayEffect.h"
 #include "GameplayEffectExtension.h"
 #include "DataType/Struct/BEGameplayModifierEvaluatedData.h"

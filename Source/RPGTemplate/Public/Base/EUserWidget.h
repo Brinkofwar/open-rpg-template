@@ -10,7 +10,7 @@
 /**
  * 
  */
-UCLASS()
+UCLASS(DisplayName = "Extended User Widget")
 class RPGTEMPLATE_API UEUserWidget : public UUserWidget
 {
 
@@ -18,7 +18,7 @@ class RPGTEMPLATE_API UEUserWidget : public UUserWidget
 
 public:
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enhanced User Widget", Meta = (ExposeOnSpawn = true))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Extended User Widget", Meta = (ExposeOnSpawn = true))
 	FInstancedStruct Arguments;
 
 };

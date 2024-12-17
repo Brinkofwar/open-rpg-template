@@ -97,23 +97,6 @@ FName UUtilityLibrary::TextToName(const FText& Text)
 	return FName(*Text.ToString());
 }
 
-UGameInstanceSubsystem* UUtilityLibrary::GetGameInstanceSubsystemOfClass(const UObject* WorldContextObject, TSubclassOf<UGameInstanceSubsystem> SubsystemClass)
-{
-	if (!WorldContextObject || !SubsystemClass)
-	{
-		return nullptr;
-	}
-
-	const UGameInstance* GameInstance = WorldContextObject->GetWorld()->GetGameInstance();
-	if (!GameInstance)
-	{
-		return nullptr;
-	}
-	
-	return GameInstance->GetSubsystemBase(SubsystemClass);
-
-}
-
 FGameplayEffectContextHandle UUtilityLibrary::GetContext(const FGameplayEffectSpec& InEffectSpec)
 {
 	return InEffectSpec.GetContext();
@@ -174,26 +157,6 @@ UEAbilitySystemComponent* UUtilityLibrary::GetEnhancedAbilitySystemComponent(AAc
 	}
 
 	return eAbilitySystem;
-}
-
-AController* UUtilityLibrary::GetLocalController(APawn* Pawn, bool& Success)
-{
-	Success = false;
-
-	if (!Pawn) {
-		return nullptr;
-	}
-
-	AController* controller = Pawn->GetController();
-	if (!controller) {
-		return nullptr;
-	}
-
-	if (controller->IsLocalPlayerController()) {
-		Success = true;
-	}
-
-	return controller;
 }
 
 bool UUtilityLibrary::GetActionValueBool(const FInputActionValue& ActionValue)
@@ -300,5 +263,40 @@ UAsyncTaskObject* UUtilityLibrary::CreateAsyncTask(TSubclassOf<UAsyncTaskObject>
 	Success = true;
 
 	return task;
+
+}
+
+bool UUtilityLibrary::RegisterDataDrivenInput(AActor* Target, const TArray<UDataInputAction*> Actions)
+{
+
+	if (!Target || !Target->InputComponent) {
+		return false;
+	}
+
+	UEInputComponent* component = CastChecked<UEInputComponent>(Target->InputComponent);
+	if (!component) {
+		return false;
+	}
+
+	component->RegisterDataInputActions(Actions);
+
+	return false;
+}
+
+bool UUtilityLibrary::UnregisterDataDrivenInput(AActor* Target, const TArray<UDataInputAction*> Actions)
+{
+
+	if (!Target || !Target->InputComponent) {
+		return false;
+	}
+
+	UEInputComponent* component = CastChecked<UEInputComponent>(Target->InputComponent);
+	if (!component) {
+		return false;
+	}
+
+	component->UnregisterDataInputActions(Actions);
+
+	return false;
 
 }

@@ -1,6 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "Base/EGameInstanceSubsystem.h"
+#include "Subsystem/EGameInstanceSubsystem.h"
 
 bool UEGameInstanceSubsystem::ShouldCreateSubsystem(UObject* object) const
 {
@@ -10,6 +10,23 @@ bool UEGameInstanceSubsystem::ShouldCreateSubsystem(UObject* object) const
 	}
 	return false;
 
+}
+
+UEGameInstanceSubsystem* UEGameInstanceSubsystem::GetSubsystem(TSubclassOf<UEGameInstanceSubsystem> SubsystemClass) const
+{
+	if (const UGameInstance* GameInstance = GetGameInstance())
+	{
+	
+		UGameInstanceSubsystem* subsystem = GameInstance->GetSubsystemBase(SubsystemClass);
+		if (!subsystem) {
+			return nullptr;
+		}
+
+		return CastChecked<UEGameInstanceSubsystem>(subsystem);
+
+	}
+
+	return nullptr;
 }
 
 /*

@@ -9,7 +9,7 @@
 #include "InstancedStruct.h"
 #include "ECharacter.generated.h"
 
-UCLASS()
+UCLASS(DisplayName = "Extended Character")
 class RPGTEMPLATE_API AECharacter : public ACharacter
 {
 	GENERATED_BODY()
@@ -24,7 +24,7 @@ protected:
 
 public:
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Replicated, Category = "ECharacter", Meta = (ExposeOnSpawn = true))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Replicated, Category = "Extended Character", Meta = (ExposeOnSpawn = true))
 	FInstancedStruct Arguments;
 
 	// Called every frame
@@ -37,51 +37,51 @@ public:
 
 #pragma region Arbitrary
 
-	UFUNCTION(BlueprintAuthorityOnly, BlueprintCallable, Server, Reliable, WithValidation, DisplayName = "Arbitrary Request", Category = "EActorComponent")
+	UFUNCTION(BlueprintAuthorityOnly, BlueprintCallable, Server, Reliable, WithValidation, DisplayName = "Arbitrary Request", Category = "Extended Character")
 	void SArbitraryRequest(FGameplayTag ChannelID, FInstancedStruct Parameters);
 	void SArbitraryRequest_Implementation(FGameplayTag ChannelID, FInstancedStruct Parameters);
 	bool SArbitraryRequest_Validate(FGameplayTag ChannelID, FInstancedStruct Parameters);
 
-	UFUNCTION(NetMulticast, Reliable, Category = "EActorComponent")
+	UFUNCTION(NetMulticast, Reliable)
 	void CArbitraryRequest(FGameplayTag ChannelID, FInstancedStruct Parameters);
 	void CArbitraryRequest_Implementation(FGameplayTag ChannelID, FInstancedStruct Parameters);
 
-	UFUNCTION(BlueprintAuthorityOnly, BlueprintCallable, Server, Reliable, WithValidation, DisplayName = "Arbitrary Response", Category = "EActorComponent")
+	UFUNCTION(BlueprintAuthorityOnly, BlueprintCallable, Server, Reliable, WithValidation, DisplayName = "Arbitrary Response", Category = "Extended Character")
 	void SArbitraryResponse(FGameplayTag ChannelID, FInstancedStruct Parameters);
 	void SArbitraryResponse_Implementation(FGameplayTag ChannelID, FInstancedStruct Parameters);
 	bool SArbitraryResponse_Validate(FGameplayTag ChannelID, FInstancedStruct Parameters);
 
-	UFUNCTION(NetMulticast, Reliable, Category = "EActorComponent")
+	UFUNCTION(NetMulticast, Reliable)
 	void CArbitraryResponse(FGameplayTag ChannelID, FInstancedStruct Parameters);
 	void CArbitraryResponse_Implementation(FGameplayTag ChannelID, FInstancedStruct Parameters);
 
-	UFUNCTION(BlueprintImplementableEvent, BlueprintCosmetic, BlueprintCallable, Category = "EActorComponent")
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCosmetic, BlueprintCallable, Category = "Extended Character")
 	void ArbitraryChannel(FGameplayTag ChannelID, FInstancedStruct Parameters, FGameplayTag& Out_ChannelID, FInstancedStruct& Out_Parameters);
 
-	UFUNCTION(BlueprintNativeEvent, BlueprintCosmetic, BlueprintCallable, Category = "EActorComponent")
+	UFUNCTION(BlueprintNativeEvent, BlueprintCosmetic, BlueprintCallable, Category = "Extended Character")
 	void OnArbitraryRequested(FGameplayTag ChannelID, FInstancedStruct Parameters);
 	virtual void OnArbitraryRequested_Implementation(FGameplayTag ChannelID, FInstancedStruct Parameters);
 
-	UFUNCTION(BlueprintNativeEvent, BlueprintCosmetic, BlueprintCallable, Category = "EActorComponent")
+	UFUNCTION(BlueprintNativeEvent, BlueprintCosmetic, BlueprintCallable, Category = "Extended Character")
 	void OnArbitraryResponded(FGameplayTag ChannelID, FInstancedStruct Parameters);
 	virtual void OnArbitraryResponded_Implementation(FGameplayTag ChannelID, FInstancedStruct Parameters);
 
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnArbitraryRequest, FGameplayTag, ChannelID, FInstancedStruct, Parameters);
-	UPROPERTY(BlueprintAssignable, BlueprintCallable, Category = "EActorComponent|Event Dispatcher")
+	UPROPERTY(BlueprintAssignable, BlueprintCallable, Category = "Extended Character|Event Dispatcher")
 	FOnArbitraryRequest OnArbitraryRequest;
 
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnArbitraryResponse, FGameplayTag, ChannelID, FInstancedStruct, Parameters);
-	UPROPERTY(BlueprintAssignable, BlueprintCallable, Category = "EActorComponent|Event Dispatcher")
+	UPROPERTY(BlueprintAssignable, BlueprintCallable, Category = "Extended Character|Event Dispatcher")
 	FOnArbitraryResponse OnArbitraryResponse;
 
 #pragma endregion Arbitrary
 
 #pragma region GameplayTag
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Replicated, Category = "EActorComponent", Meta = (ExposeOnSpawn = true))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Replicated, Category = "Extended Character", Meta = (ExposeOnSpawn = true))
 	FGameplayTagContainer GameplayTags;
 
-	UFUNCTION(BlueprintAuthorityOnly, BlueprintCallable, Server, Reliable, WithValidation, DisplayName = "Add Gameplay Tag", Category = "EActorComponent|Gameplay Tag")
+	UFUNCTION(BlueprintAuthorityOnly, BlueprintCallable, Server, Reliable, WithValidation, DisplayName = "Add Gameplay Tag", Category = "Extended Character|Gameplay Tag")
 	void SAddGameplayTag(FGameplayTag Tag);
 	void SAddGameplayTag_Implementation(FGameplayTag Tag);
 	bool SAddGameplayTag_Validate(FGameplayTag Tag);
@@ -91,7 +91,7 @@ public:
 	void CAddGameplayTag_Implementation(FGameplayTag Tag);
 
 
-	UFUNCTION(BlueprintAuthorityOnly, BlueprintCallable, Server, Reliable, WithValidation, DisplayName = "Remove Gameplay Tag", Category = "EActorComponent|Gameplay Tag")
+	UFUNCTION(BlueprintAuthorityOnly, BlueprintCallable, Server, Reliable, WithValidation, DisplayName = "Remove Gameplay Tag", Category = "Extended Character|Gameplay Tag")
 	void SRemoveGameplayTag(FGameplayTag Tag);
 	void SRemoveGameplayTag_Implementation(FGameplayTag Tag);
 	bool SRemoveGameplayTag_Validate(FGameplayTag Tag);
@@ -101,11 +101,11 @@ public:
 	void CRemoveGameplayTag_Implementation(FGameplayTag Tag);
 
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnTagAdded, FGameplayTag, Tag);
-	UPROPERTY(BlueprintAssignable, Category = "EActorComponent|Event Dispatcher")
+	UPROPERTY(BlueprintAssignable, Category = "Extended Character|Event Dispatcher")
 	FOnTagAdded OnTagAdded;
 
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnTagRemoved, FGameplayTag, Tag);
-	UPROPERTY(BlueprintAssignable, Category = "EActorComponent|Event Dispatcher")
+	UPROPERTY(BlueprintAssignable, Category = "Extended Character|Event Dispatcher")
 	FOnTagRemoved OnTagRemoved;
 
 #pragma endregion GameplayTag

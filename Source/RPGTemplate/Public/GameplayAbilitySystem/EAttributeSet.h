@@ -27,7 +27,7 @@
 /**
  * 
  */
-UCLASS()
+UCLASS(DisplayName = "Extended Attribute Set")
 class RPGTEMPLATE_API UEAttributeSet : public UAttributeSet
 {
 
@@ -35,22 +35,22 @@ class RPGTEMPLATE_API UEAttributeSet : public UAttributeSet
 
 public:
 
-	UFUNCTION(BlueprintImplementableEvent, Category = "Enhanced Attribute Set")
+	UFUNCTION(BlueprintImplementableEvent, Category = "Extended Attribute Set")
 	const bool AllowBlueprintExecution();
 
-	UFUNCTION(BlueprintImplementableEvent, Category = "Enhanced Attribute Set")
+	UFUNCTION(BlueprintImplementableEvent, Category = "Extended Attribute Set")
 	float OnPreAttributeChange(const FGameplayAttribute& Attribute, float NewValue);
 
-	UFUNCTION(BlueprintImplementableEvent, Category = "Enhanced Attribute Set")
+	UFUNCTION(BlueprintImplementableEvent, Category = "Extended Attribute Set")
 	bool OnPostAttributeChange(const FGameplayAttribute& Attribute, float OldValue, float NewValue);
 
-	UFUNCTION(BlueprintImplementableEvent, Category = "Enhanced Attribute Set")
+	UFUNCTION(BlueprintImplementableEvent, Category = "Extended Attribute Set")
 	bool OnPostGameplayEffectExecute(const FGameplayEffectSpec InEffectSpec, FBEGameplayModifierEvaluatedData InEvaluatedData, UAbilitySystemComponent* InTarget);
 
-	UFUNCTION(BlueprintCallable, Category = "Enhanced Attribute Set")
+	UFUNCTION(BlueprintCallable, Category = "Extended Attribute Set")
 	virtual void SetAttribute(FGameplayAttribute Attribute, float NewValue);
 
-	UFUNCTION(BlueprintCallable, Category = "Enhanced Attribute Set")
+	UFUNCTION(BlueprintCallable, Category = "Extended Attribute Set")
 	virtual float GetAttribute(FGameplayAttribute Attribute) const;
 
 	virtual void PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue) override;

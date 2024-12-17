@@ -3,8 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Base/EAttributeSet.h"
 #include "AbilitySystemComponent.h"
+#include "GameplayAbilitySystem/EAttributeSet.h"
 #include "HealthAttributeSet.generated.h"
 
 /**

@@ -12,7 +12,7 @@
 * Game Instance Subsystems are not tied to a specific world, as they operate at the game instance,
 * which persists across all worlds.
 */
-UCLASS(Blueprintable)
+UCLASS(Blueprintable, DisplayName = "Extended Game Instance Subsystem")
 class RPGTEMPLATE_API UEGameInstanceSubsystem : public UGameInstanceSubsystem
 {
 
@@ -20,13 +20,20 @@ class RPGTEMPLATE_API UEGameInstanceSubsystem : public UGameInstanceSubsystem
 
 public:
 
-	UFUNCTION(BlueprintImplementableEvent, Category = "Enhanced Game Instance Subsystem")
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Extended Game Instance Subsystem")
+	void PostInitialize();
+
+	UFUNCTION(BlueprintImplementableEvent, Category = "Extended Game Instance Subsystem")
 	void OnInitialized();
 
-	UFUNCTION(BlueprintImplementableEvent, Category = "Enhanced Game Instance Subsystem")
+	UFUNCTION(BlueprintImplementableEvent, Category = "Extended Game Instance Subsystem")
 	void OnDeinitialized();
 
+	UFUNCTION(BlueprintCallable, Category = "Extended Game Instance Subsystem", meta = (DeterminesOutputType = "SubsystemClass"))
+	UEGameInstanceSubsystem* GetSubsystem(TSubclassOf<UEGameInstanceSubsystem> SubsystemClass) const;
+
 protected:
+
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
 	virtual void Deinitialize() override;
 	virtual bool ShouldCreateSubsystem(UObject* object) const override;
